@@ -1,1 +1,7 @@
-[![Review Assignment Due Date](https://classroom.github.com/assets/deadline-readme-button-22041afd0340ce965d47ae6ef1cefeee28c7c493a6346c4f15d667ab976d596c.svg)](https://classroom.github.com/a/udsAkGrn)
+# project-adventure
+HOW CODE WILL WORK
+every time a choice button is pressed, it checks the class of the button.
+IF there is a div with the ID of the button, then make that div visible and push the previous path into the log
+otherwise if the button is meant to do something else (fight, poker, etc), let a different javascript code handle it.
+If there is a different way to progress than clicking a button (eg. winning poker/battles), then give the battle a class that triggers a search for a specific ID after an outcome
+figure out other conditions as they come (aka, do work now)

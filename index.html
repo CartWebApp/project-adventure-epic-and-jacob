@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Project Adventure</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <nav>
+        <!-- this dosent really do anything except look cool  -->
+    </nav>
+    <div id="bigArrange">
+    <div id="section1">
+    <div id="stats">
+        <span class="Name"></span>
+        <div id="healhCount">
+            <p>Health: <span class="health"></span><progress class="healthBar"></progress></p>
+        </div>
+        <div id="energyCount">
+            <p>Energy: <span class="energy"></span><progress class="energyBar"></progress></p>
+        </div>
+        <div id="talonCount">
+            <p>Talons: ᛤ<span class="talons"></span></p>
+        </div>
+    </div>
+        <div>
+        <section id='story'>
+            <section class="menuC">
+                <div>
+                <label for="name">Enter your name, peasant.</label>
+                <input type="text" placeholder="Guy" id="nameEnterer" name="name"></input>
+                </div>
+                <div class="btnArrangement"></div>
+                <button id="enterName" class="choice">Start your adventure!</button>
+            </section> 
+            <!-- fills with js -->
+        </section>
+            <button id='log'>View Log</button>
+            <!-- shop div  -->
+            <section class="hidden" id="shop">
+                <h2>Shop</h2>
+                <div id="itemList"></div>
+            </section>
+
+            <!-- battle div  -->
+            <div id="battle" class="hidden">
+                <div id="commentary"></div>
+                <div id="combatants">
+                    <div id="human">
+                        <img id="humanPic" src='#'alt="You, the player">
+                        <div class="statArrangement">
+                            <span class="name"></span>
+                            <div>Health: <span class="health"></span><progress class="healthBar"></progress></div>
+                            <div>Energy: <span class="energy"></span><progress class="energyBar"></progress></div>
+                        </div>
+                    </div>
+                    <div id="enemy">
+                        <img id="enemyPic" alt="The enemy!" src="#">
+                        <div class="statArrangement">
+                            <span class="enName"></span>
+                            <div>Health: <span class="enHealth"></span><progress class="enHealthBar"></progress></div>
+                            <div>Energy: <span class="enEnergy"></span><progress class="enEnergyBar"></progress></div>
+                        </div>
+                    </div>
+                </div>
+                <div id="buttonList"></div>
+            </div>
+
+
+        </div>
+        </div>
+        <div id="inventory"></div>
+        </div>
+        <dialog id="textLog">
+            <section id="textLogContent"></section>
+            <form method="dialog">
+                <button>Close</button>
+            </form>
+        </dialog>
+<script src="textStuff.js" type="module"></script>
+</body>
+</html>

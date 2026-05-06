@@ -1,0 +1,239 @@
+:root {
+    --brown: #544B3D;
+    --white: #FFF;
+    --emerald: #70B77E;
+    --red: #FF6663;
+    --amethyst: #0D0630;
+}
+
+body {
+    color: var(--amethyst);
+    font-style: oblique;
+    font-family: Andale Mono, monospace;
+    background-image: url(stupidimages/Background.png);
+    background-size: auto 100vh;
+    background-repeat: no-repeat;
+    padding: 0px;
+    margin: 0px;
+    overflow-y: hidden;
+}
+button {
+    border-radius: 20px;
+    padding: 5px;
+}
+
+#textLog {
+    z-index: 1000;
+    width: 70vw;
+    height: 70vh;
+    justify-self: center;
+    align-self: center;
+}
+
+#bigArrange {
+    display: flex;
+    justify-content: space-between;
+}
+
+#story {
+    background-color: #ffffff7c;
+    padding: clamp(4px, 1vw, 7px);
+    font-size: clamp(12px, 2vw, 16px);
+    padding: 7px;
+    overflow-y: scroll;
+}
+
+#section1 {
+    width: clamp(280px, 75vw, 100%);
+    height: clamp(300px, 90vh, 100%);
+    padding: clamp(3px, 1vw, 5px);
+}
+
+#inventory {
+    background-color: var(--brown);
+    height: clamp(300px, 90vh, 100%);
+    width: clamp(70px, 15vw, 120px);
+}
+
+nav {
+    height: clamp(40px, 6vh, 60px);
+    background-color: var(--emerald);
+}
+
+#stats {
+    background-color: #ffffffad ;
+}
+
+#nameEnterer {
+    border-radius: 20px;
+}
+
+#log {
+    background-color: var(--brown);
+    color: var(--white);
+    text-align: center;
+    justify-self: center;
+    align-self: center;
+    margin-top: 10px;
+    border-radius: 20px;
+    width: clamp(120px, 30vw, 200px);
+    height: clamp(40px, 8vh, 55px);
+    font-size: clamp(14px, 3vw, 25px);
+}
+.choices {
+    display: flex;
+}
+
+.SWORD {
+    background-color: purple;
+    color: var(--white);
+    padding: clamp(2px, 0.5vw, 3px) clamp(3px, 0.8vw, 5px);
+    margin: clamp(3px, 0.8vw, 5px);
+    border-radius: 20px;
+    font-size: clamp(11px, 1.8vw, 15px);
+}
+
+.SWORD {
+    background-color: white;
+    color: purple;
+    border: 1px solid purple;
+    cursor: crosshair;
+}
+
+progress {
+    height: 40px;
+    width: 20%;
+    margin-left: 10px;
+}
+
+.choice {
+    background-color: var(--amethyst);
+    color: var(--white);
+    padding: clamp(2px, 0.5vw, 3px) clamp(3px, 0.8vw, 5px);
+    margin: clamp(3px, 0.8vw, 5px);
+    border-radius: 20px;
+    font-size: clamp(11px, 1.8vw, 15px);
+}
+
+.statArrangement {
+    border: #0D0630 1px solid;
+}
+
+#enemy, #human {
+    display: flex;
+    flex-direction: column;
+}
+
+#humanPic, #enemyPic {
+    height: 200px;
+    display: block;
+    margin: auto;
+}
+
+.hidden {
+    display: none;
+}
+
+#textLog {
+    
+}
+
+.health, .energy, .enHealth, .enEnergy {
+    padding-right: 10px;
+}
+
+.choice:hover {
+    background-color: var(--white);
+    color: var(--amethyst);
+    border: 1px solid var(--amethyst);
+    cursor: crosshair;
+}
+
+#attack {
+    background-color: #FF6663;
+    color: #FFF;
+}
+#attack:hover {
+    background-color: #FFF;
+    color: #FF6663;
+    border: #FF6663 solid 1px;
+    cursor: crosshair;
+}
+#commBox {
+    height: 15%;
+    width: 100%;
+}
+#mve {
+    display: flex;
+    flex-direction: row;
+    align-content: space-around;
+    height: 75%;
+    width: 100%;
+}
+#human {
+    width: 40%;
+    border: var(--red) 1px green;
+}
+#human > img {
+    width: 50%;
+}
+#fiend {
+    width: 40%;
+}
+#field > img {
+    width: 40;
+}
+#buttonlist {
+    width: 100%;
+    height: 25%;
+}
+#defend {
+    background-color: lightblue;
+    color: black;
+}
+#defend:hover {
+    background-color: darkblue;
+    color: white;
+    border: white solid 1px;
+    cursor: crosshair;
+}
+#heal {
+    background-color: #70B77E;
+    color: #FFF;
+}
+#heal:hover {
+    background-color: #FFF;
+    color: #70B77E;
+    border: #70B77E solid 1px;
+    cursor: crosshair;
+}
+.Hit {
+    background-color: #70B77E;
+    color: var(--white);
+    padding: clamp(2px, 0.5vw, 3px) clamp(3px, 0.8vw, 5px);
+    margin: clamp(3px, 0.8vw, 5px);
+    border-radius: 20px;
+    font-size: clamp(11px, 1.8vw, 15px);
+}
+.Stand {
+    background-color: #70B77E;
+    color: var(--white);
+    padding: clamp(2px, 0.5vw, 3px) clamp(3px, 0.8vw, 5px);
+    margin: clamp(3px, 0.8vw, 5px);
+    border-radius: 20px;
+    font-size: clamp(11px, 1.8vw, 15px);
+}
+#combatants {
+    display: flex;
+    justify-content: space-between;
+}
+#buttonList {
+    display: flex;
+    justify-content: space-around;
+}
+#commentary {
+    border: 1px solid white;
+    background-color: var(--amethyst);
+    color: white;
+    border-radius: 20px;
+}
