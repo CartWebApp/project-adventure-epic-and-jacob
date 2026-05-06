@@ -11,6 +11,7 @@ export const battleScreen = document.getElementById('battle');
 export const shopScreen = document.getElementById('shop');
 const konamiCode = ['ArrowUp', 'ArrowUp', 'ArrowDown', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'ArrowLeft', 'ArrowRight', 'b', 'a' ];
 import { player } from "./playerStats.js";
+import { transition } from "./movePaths.js";
 //Variables
 export let name = "Guy";
 let elic = 'pizza';
@@ -79,6 +80,14 @@ export function updateStats() {
         talonElements[i].textContent = player.talons;
     }
 }
+
+const nameEntry = document.getElementById('nameEnterer');
+const submitName = document.getElementById('enterName');
+submitName.addEventListener('click', function() {
+  name = nameEntry.value || 'Guy';
+  console.log(name);
+  transition('start');
+});
 
 //functions
 //branch logic

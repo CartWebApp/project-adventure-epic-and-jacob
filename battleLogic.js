@@ -1,6 +1,8 @@
-import { luck, name, maxHP, HP, energy, atk, healCost, defendingStatus, isItMyTurnYet, textBox, battleScreen, updateStats } from "./textStuff.js";
+import { name, textBox, battleScreen, updateStats } from "./textStuff.js";
 import { transition } from "./movePaths.js";
 import { enemy } from "./enemylist.js";
+import { player } from "./playerStats.js";
+let isItMyTurnYet = true;
 export function createBattle(idName, winpath, losepath) {
     console.log(`Battling ${idName}`);
     //boring dom stuff

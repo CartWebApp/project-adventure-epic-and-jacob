@@ -293,22 +293,22 @@ export let enemy = {
     fallback: {
         name: 'Jared Fast',
         img: 'enemyFiles/fastFallback.png',
-        attack: 67,
-        defense: 67,
-        luck: 67,
+        attack: 6700,
+        defense: 6700,
+        luck: 6700,
         defending: false,
-        maxhp: 1000,
-        hp: 1000,
-        maxenergy: 1000,
-        energy: 1000,
+        maxhp: 100000,
+        hp: 100000,
+        maxenergy: 100000,
+        energy: 100000,
         healCost: 0,
         actions: ['attack', 'heal', 'defend', 'waste'],
         waste: 'You have been spared a turn.',
         drop: {
-            attack: 67,
-            defense: 67,
-            hp: 67,
-            energy: 67,
+            attack: 6700,
+            defense: 6700,
+            hp: 6700,
+            energy: 6700,
         }
     }
 };

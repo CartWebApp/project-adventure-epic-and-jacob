@@ -9,4 +9,5 @@ export let player = {
     defense: 5,
     healCost: 20,
     defending: false,
+    shardCount: 0,
 }

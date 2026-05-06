@@ -8,6 +8,12 @@ import { startBlackjack } from "./blackjack.js";
 import { player } from "./playerStats.js";
 let log = [];
 let talons = player.talons;
+let shardCount = player.shardCount;
+
+function updateStuff() {
+    player.talons = talons;
+    player.shardCount = shardCount;
+}
 
 export function transition(t) {
     // Update stats display
@@ -110,6 +116,7 @@ export function transition(t) {
             button.classList.add('choice')
             btnArr.appendChild(button);
             console.log(btnArr);
+            updateStuff()
         }}
         textBox.appendChild(btnArr);
     };
