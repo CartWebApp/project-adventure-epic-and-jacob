@@ -124,8 +124,8 @@ function renderBlackjack(showDealer) {
     btnWrap.appendChild(standBtn);
     textBox.appendChild(btnWrap);
 
-    hitBtn.onclick = blackjackHit();
-    standBtn.onclick = blackjackStand();
+    hitBtn.onclick = blackjackHit;
+    standBtn.onclick = blackjackStand;
 }
 
 // === START ===
