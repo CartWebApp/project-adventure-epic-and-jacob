@@ -1,5 +1,3 @@
-
-let shardCount = 0;
 export const textBox = document.getElementById('story');
 export const battleScreen = document.getElementById('battle');
 import { story } from "./story.js";
@@ -7,8 +5,9 @@ import { updateStats } from "./textStuff.js";
 import { createBattle } from "./battleLogic.js";
 import { createShop } from "./shopLogic.js";
 import { startBlackjack } from "./blackjack.js";
-const log = [];
-let talons = 300;
+import { player } from "./playerStats.js";
+let log = [];
+let talons = player.talons;
 
 export function transition(t) {
     // Update stats display
@@ -53,9 +52,11 @@ export function transition(t) {
             console.log(path);
             if (path === 'results') {
                 shardCount++;
+                console.log(`shard added: ${shardCount}`)
             }
             if (path === 'dimensionSwordEnd') {
                 if (shardCount > 6) {
+                    console.log(`Shard path created at ${shardCount}`)
                     const button = document.createElement('button');
                     button.classList.add('SWORD')
                     button.addEventListener('click', function() {
@@ -64,14 +65,17 @@ export function transition(t) {
                     button.innerHTML =  btnText;
                     btnArr.appendChild(button);
                     console.log(btnArr);
-                };
+                }
+                else if (shardCount < 6) {
+                    console.log('There never was a dimensionSword!')
+                }
             }
         if (path === 'unquotaAggro') {
             if (agressive) {
                 const button = document.createElement('button');
                 button.addEventListener('click', function() {
                     transition(path);
-                });
+                })
                 button.innerHTML =  btnText;
                 btnArr.appendChild(button);
                 console.log(btnArr);
@@ -106,8 +110,7 @@ export function transition(t) {
             button.classList.add('choice')
             btnArr.appendChild(button);
             console.log(btnArr);
-        };
-        }
+        }}
         textBox.appendChild(btnArr);
     };
     // Update talons if the branch has a talons property
@@ -173,8 +176,8 @@ const logDiv = document.getElementById('textLog');
 const logDivSection = document.createElement('textLogContent');
 function displayLog() {
     for (const thingy of log) {
-        const event = log[thingy];
         const ul = document.createElement('ul');
+        const event = log[thingy];
         const li = document.createElement('li');
         li.classList.add('ancientScroll');
         li.innerHTML = event;

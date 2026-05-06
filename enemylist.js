@@ -1,5 +1,5 @@
 //enemyList
-export const enemy = {
+export let enemy = {
     banditNexdor: {
         name: 'Agressive Bandit',
         img: 'enemyFiles/bandit.png',

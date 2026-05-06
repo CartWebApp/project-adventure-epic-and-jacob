@@ -9,7 +9,6 @@ export function createBattle(idName, winpath, losepath) {
     const humanImg = document.getElementById('humanPic');
     const enemyImg = document.getElementById('enemyPic');
     let myTurn = isItMyTurnYet;
-
         //stats 
         let foe = enemy[`${idName}`];
         console.log(foe);
@@ -119,6 +118,7 @@ export function createBattle(idName, winpath, losepath) {
                 dsA = false;
                 console.log(nA, hA);
                 console.log(nB, hB);
+                updateStats();
                 return;
             }
             else if (dsB == false) {
