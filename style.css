@@ -23,6 +23,8 @@ button {
 }
 
 #textLog {
+    margin: auto;
+    
     z-index: 1000;
     width: 70vw;
     height: 70vh;

@@ -169,12 +169,21 @@ function addToLog(branch) {
 }
 
 
-const logDiv = document.getElementById('textLog')
+const logDiv = document.getElementById('textLog');
+const logDivSection = document.createElement('textLogContent');
 function displayLog() {
+    for (const thingy of log) {
+        const event = log[thingy];
+        const ul = document.createElement('ul');
+        const li = document.createElement('li');
+        li.classList.add('ancientScroll');
+        li.innerHTML = event;
+        ul.appendChild(li);
+    }
     if (logDiv.classList.contains('hidden')) {
-        logDiv.classList.remove('hidden')
+        logDiv.classList.remove('hidden');
     }
     else {
-        logDiv.classList.add('hidden')
+        logDiv.classList.add('hidden');
     }
 }
