@@ -8,7 +8,8 @@ export const story = {
      hard: {
          text: 'You plead with the collectors. You tell them, \"I can\'t bring a million to you in a week. Please, can you lower the amount - or at least extend the time?\" The Collectors do not care. They start adding intrest to your debt. You now owe 1.2 million Talons It would not be wise to plead further',
          choice: ['Accept your fate and start looking for help'],
-         choiceId: ['oldEncounter']
+         choiceId: ['oldEncounter'],
+         memory: 'Bargained with the collectors.'
      },
      oldEncounter: {
          text: 'You come across three old men, each of which look very different vibes. \n The first man seems to be very prideful, and seems well-built. On his belt is a sword, which seems to be ready to strike at any moment. \n The second man is very sketchy, and is the first to notice you before you even have the opportunity to notice him. \n The third man seems very unruly. He is not very well-dressed, and has a passionate look in his eyes.\n The three men seemed to be talking about something so you decide to approach them. You tell these men about your predicament. They all listen to your tale and say that they can offer a solution.\n Who\'s idea should you consider?',

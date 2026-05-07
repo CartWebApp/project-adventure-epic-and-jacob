@@ -4,25 +4,7 @@ import { enemy } from "./enemylist.js";
 import { player } from "./playerStats.js";
 
 
-let HP = player.HP;
-let maxHP = player.maxHP;
-let energy = player.energy;
-let maxenergy = player.maxenergy;
-let attack = player.attack;
-let defense = player.defense;
-let luck = player.luck;
-let defending = player.defending;
-let healCost = player.healCost;
 let isItMyTurnYet = true;
-
-function updateGlobalStats(newDefStatus, newHp, newEnergy) {
-    player.defending = newDefStatus;
-    player.HP = newHp;
-    player.energy = newEnergy;
-    defending = newDefStatus;
-    HP = newHp;
-    enemy = newEnergy;
-}
 
 export function createBattle(idName, winpath, losepath) {
     console.log(`Battling ${idName}`);
@@ -31,42 +13,32 @@ export function createBattle(idName, winpath, losepath) {
     const butonDiv = document.getElementById('buttonList');
     const humanImg = document.getElementById('humanPic');
     const enemyImg = document.getElementById('enemyPic');
-    let myTurn = isItMyTurnYet;
         //stats 
-        let foe = enemy[`${idName}`];
-        console.log(foe);
-        let enName = foe.name;
-        let enAtk = foe.attack;
-        let enDef = foe.defense;
-        let enLuck = foe.luck;
-        let enMaxhp = foe.maxhp;
-        let enHealCost = foe.healCost;
-        let enMaxe = foe.maxenergy;
-        let enWaste = foe.waste;
-        let enDefending = foe.defending;
-        let enhp = foe.hp;
-        let ene = foe.energy;
-        const actions = foe.actions;
-        let enemyIcon = foe.img;
-
-        function updateEnemyStats(newAttack, newDefense, newLuck, newHp, newEnergy, newHealCost) {
-            enhp = newHp;
-            ene = newEnergy;
-            enDef = newDefense;
-            enLuck = newLuck;
-            enAtk = newAttack;
-            enHealCost = newHealCost;
-            foe.hp = enhp;
-            foe.attack = enAtk;
-            foe.defense = enDef;
-            foe.luck = enLuck;
-            foe.energy = ene;
-            foe.healCost = enHealCost;
-            updateEnemyStats();
+        
+        class fiend {
+            constructor(name, icon, atk, def, luck, defending, maxhp, hp, energy, maxenergy, healcost, actions, waste, drop) {
+                this.name = name;
+                this.img;
+                this.atk = atk;
+                this.def = def;
+                this.luck = luck;
+                this.hp = hp;
+                this.maxhp = maxhp;
+                this.healCost = healcost;
+                this.maxenergy = maxenergy;
+                this.energy = energy;
+                this.actions = actions;
+                this.icon = icon;
+                this.waste = waste;
+                this.defending = defending;
+                this.drop = drop;
+            }
         }
+        let foe = new fiend(...Object.values(enemy[idName]));
+        console.log(foe);
 
-        if (enemyIcon != null) {
-            enemyImg.src = enemyIcon;
+        if (foe.icon != null) {
+            enemyImg.src = foe.icon;
         }
         else {
             enemyImg.src = enemy['fallback'].img;
@@ -83,29 +55,29 @@ export function createBattle(idName, winpath, losepath) {
             const healthElements = document.getElementsByClassName('enHealth');
             const healthBars = document.getElementsByClassName('enHealthBar');
             for (let i = 0; i < healthElements.length; i++) {
-                healthElements[i].textContent = enhp;
+                healthElements[i].textContent = foe.hp;
             }
             console.log('Updating Energy')
             for (let i = 0; i < healthBars.length; i++) {
-                healthBars[i].value = enhp;
-                healthBars[i].max = enMaxhp;
+                healthBars[i].value = foe.hp;
+                healthBars[i].max = foe.maxhp;
             }
             
             // Update energy display and progress bar
             const energyElements = document.getElementsByClassName('enEnergy');
             const energyBars = document.getElementsByClassName('enEnergyBar');
             for (let i = 0; i < energyElements.length; i++) {
-                energyElements[i].textContent = ene;
+                energyElements[i].textContent = foe.energy;
             }
             for (let i = 0; i < energyBars.length; i++) {
-                energyBars[i].max = enMaxe;
-                energyBars[i].value = ene;
+                energyBars[i].max = foe.maxenergy;
+                energyBars[i].value = foe.energy;
             }
             //update any names
             const nameElements = document.getElementsByClassName('enName');
             for (let i = 0; i < nameElements.length; i++) {
                 const element = nameElements[i];
-                element.innerHTML = enName;
+                element.innerHTML = foe.name;
             }
         }
         //attack, defend, heal, and waste turn (enemy only)
@@ -144,6 +116,7 @@ export function createBattle(idName, winpath, losepath) {
             dsA = false;
             if (dsB === true) {
                 //ATTACKING WHILE DEFENDING
+                console.log('BEFORE');
                 console.log(nA, hA);
                 console.log(nB, hB);
                 let damage = (Math.round(Math.random() * lB * dB/2 * 5))
@@ -153,7 +126,7 @@ export function createBattle(idName, winpath, losepath) {
                 }
                 dsB = false;
                 commentary.innerHTML = `${nA} attacks! But ${nB} counters and attacks for ${damage} health!`;
-                dsA = false;
+                console.log('AFTER');
                 console.log(nA, hA);
                 console.log(nB, hB);
                 updateStats();
@@ -161,6 +134,7 @@ export function createBattle(idName, winpath, losepath) {
             }
             else if (dsB === false) {
                 //ATTACKING
+                console.log('BEFORE');
                 console.log(nA, hA);
                 console.log(nB, hB);
                 let damage = (Math.round(Math.random() * 5 * lA * aA/2));
@@ -169,28 +143,32 @@ export function createBattle(idName, winpath, losepath) {
                     hB = 0;
                 };
                 commentary.innerHTML = `${nA} attacks! ${damage} damage dealt to opposing ${nB}!`;
+                console.log('AFTER')
                 console.log(nA, hA);
                 console.log(nB, hB);
                 return;
             }
         }
         function enemyMove() {
-            const move = actions[(Math.round(Math.random() * actions.length))]
+            console.log(foe.actions);
+            const move = foe.actions[(Math.round(Math.random() * foe.actions.length))];
+            console.log(`current move: ${move}`);
+            
             if (move == 'attack') {
                 console.log('enemy attacking');
-                fight(enAtk, defense, enDefending, defending, enLuck, luck, enName, name, enhp, HP);
+                fight(foe.atk, player.defense, foe.defending, player.defending, foe.luck, player.luck, foe.name, name, foe.hp, player.HP);
             }
             else if (move == 'defend') {
                 console.log('enemy defending');
-                defend(enDefending, enName);
+                defend(foe.defending, foe.name);
             }
             else if (move == 'heal') {
                 console.log('enemy healing');
-                heal(ene, enHealCost, enhp, enMaxhp, enLuck, enName, enDefending);
+                heal(foe.energy, foe.healCost, foe.hp, foe.maxhp, foe.luck, foe.name, foe.defending);
             }
             else {
                 console.log('enemy wasting time');
-                waste(enWaste);
+                waste(foe.waste);
             }
             updateEnemyStats();
             createTransitionButton();
@@ -201,14 +179,14 @@ export function createBattle(idName, winpath, losepath) {
             stuff.innerHTML = 'Next -->';
             butonDiv.innerHTML = '';
             butonDiv.appendChild(stuff);
-            if (enhp != 0 && HP != 0) {
+            if (foe.hp != 0 && player.HP != 0) {
                 console.log('battle continuing');
-                console.log(myTurn)
-                if (myTurn) {
+                console.log(isItMyTurnYet)
+                if (isItMyTurnYet) {
                     stuff.addEventListener('click', function() {
                         updateEnemyStats();
                         updateStats();
-                        myTurn = !myTurn;
+                        isItMyTurnYet = !isItMyTurnYet;
                         guyTurn();
                         
                     })
@@ -217,21 +195,21 @@ export function createBattle(idName, winpath, losepath) {
                     stuff.addEventListener('click', function() {
                         updateEnemyStats();
                         updateStats();
-                        myTurn = !myTurn;
+                        isItMyTurnYet = !isItMyTurnYet;
                         enemyMove();       
                     })
                 }
             }
-            else if (enhp == 0) {
+            else if (foe.hp == 0) {
                 console.log('battle won!');
-                commentary.innerHTML = `You beat ${enName}!`
+                commentary.innerHTML = `You beat ${foe.name}!`
                 stuff.addEventListener('click', function() {
                     transition(winpath);
                 })
             }
-            else if (HP == 0) {
+            else if (player.HP == 0) {
                 console.log('battle won!');
-                    commentary.innerHTML = `You lost to ${enName}!`
+                    commentary.innerHTML = `You lost to ${foe.name}!`
                     stuff.addEventListener('click', function() {
                         transition(losepath);
                     })
@@ -247,24 +225,21 @@ export function createBattle(idName, winpath, losepath) {
             attackButton.classList.add('attack');
             attackButton.innerHTML = 'Attack!';
             attackButton.addEventListener('click', function() {
-                fight(attack, enDef, defending, enDefending, luck, enLuck, name, enName, HP, enhp);
-                updateGlobalStats(defending, HP, energy);
+                fight(player.attack, foe.def, player.defending, foe.defending, player.luck, foe.luck, name, foe.name, player.HP, foe.hp);
                 createTransitionButton();
             })
             const defendButton = document.createElement('button');
             defendButton.classList.add('defend');
             defendButton.innerHTML = 'Defend';
             defendButton.addEventListener('click', function() {
-                defend(defending, name);
-                updateGlobalStats(defending, HP, energy);
+                defend(player.defending, name);
                 createTransitionButton();
             })
             const healButton = document.createElement('button');
             healButton.classList.add('Heal');
-            healButton.innerHTML = `Heal (${healCost} Energy)`;
+            healButton.innerHTML = `Heal (${player.healCost} Energy)`;
             healButton.addEventListener('click', function() {
-                heal(energy, healCost, HP, maxHP, luck, name, defending);
-                updateGlobalStats(defending, HP, energy);
+                heal(player.energy, player.healCost, player.HP, player.maxHP, player.luck, name, player.defending);
                 createTransitionButton();
             })
             butonDiv.appendChild(attackButton);
