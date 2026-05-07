@@ -589,7 +589,7 @@ export const story = {
          text: 'You lose at blackjack. You lose 20 talons, but you decide to keep playing, hoping to win it back.',
          choice: ['Play again', 'go upgrade your luck'],
          choiceId: ['blackjack', 'luckUpgrade'],
-         talons: -20
+         talons: -2000
      },
      luckUpgrade: {
          type: 'shop',
