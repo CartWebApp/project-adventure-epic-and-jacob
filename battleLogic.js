@@ -2,7 +2,28 @@ import { name, textBox, battleScreen, updateStats } from "./textStuff.js";
 import { transition } from "./movePaths.js";
 import { enemy } from "./enemylist.js";
 import { player } from "./playerStats.js";
+
+
+let HP = player.HP;
+let maxHP = player.maxHP;
+let energy = player.energy;
+let maxenergy = player.maxenergy;
+let attack = player.attack;
+let defense = player.defense;
+let luck = player.luck;
+let defending = player.defending;
+let healCost = player.healCost;
 let isItMyTurnYet = true;
+
+function updateGlobalStats(newDefStatus, newHp, newEnergy) {
+    player.defending = newDefStatus;
+    player.HP = newHp;
+    player.energy = newEnergy;
+    defending = newDefStatus;
+    HP = newHp;
+    enemy = newEnergy;
+}
+
 export function createBattle(idName, winpath, losepath) {
     console.log(`Battling ${idName}`);
     //boring dom stuff
@@ -27,6 +48,23 @@ export function createBattle(idName, winpath, losepath) {
         let ene = foe.energy;
         const actions = foe.actions;
         let enemyIcon = foe.img;
+
+        function updateEnemyStats(newAttack, newDefense, newLuck, newHp, newEnergy, newHealCost) {
+            enhp = newHp;
+            ene = newEnergy;
+            enDef = newDefense;
+            enLuck = newLuck;
+            enAtk = newAttack;
+            enHealCost = newHealCost;
+            foe.hp = enhp;
+            foe.attack = enAtk;
+            foe.defense = enDef;
+            foe.luck = enLuck;
+            foe.energy = ene;
+            foe.healCost = enHealCost;
+            updateEnemyStats();
+        }
+
         if (enemyIcon != null) {
             enemyImg.src = enemyIcon;
         }
@@ -100,37 +138,32 @@ export function createBattle(idName, winpath, losepath) {
             commentary.innerHTML = `${w}`;
         }
         //A = attacker stat, B = defender stat
-        function attack(aA, dB, dsA, dsB, lA, lB, nA, nB, hA, hB) {
+        function fight(aA, dB, dsA, dsB, lA, lB, nA, nB, hA, hB) {
             //BUG DISCOVERED: variables don't update after they change. Why?
+            //still have no damn clue on how to make this work.
             dsA = false;
-            if (dsB == true) {
+            if (dsB === true) {
                 //ATTACKING WHILE DEFENDING
                 console.log(nA, hA);
                 console.log(nB, hB);
                 let damage = (Math.round(Math.random() * lB * dB/2 * 5))
-                if (damage < 0) {
-                    damage = 0;
-                }
                 hA = hA - damage;
                 if (hA < 0) {
                     hA = 0;
-                };
+                }
                 dsB = false;
                 commentary.innerHTML = `${nA} attacks! But ${nB} counters and attacks for ${damage} health!`;
                 dsA = false;
                 console.log(nA, hA);
                 console.log(nB, hB);
                 updateStats();
-                return;
+                updateHP();
             }
-            else if (dsB == false) {
+            else if (dsB === false) {
                 //ATTACKING
                 console.log(nA, hA);
                 console.log(nB, hB);
                 let damage = (Math.round(Math.random() * 5 * lA * aA/2));
-                if (damage < 0) {
-                    damage = 0;
-                }
                 hB = hB - damage;
                 if (hB < 0) {
                     hB = 0;
@@ -145,7 +178,7 @@ export function createBattle(idName, winpath, losepath) {
             const move = actions[(Math.round(Math.random() * actions.length))]
             if (move == 'attack') {
                 console.log('enemy attacking');
-                attack(enAtk, defend, enDefending, defendingStatus, enLuck, luck, enName, name, enhp, HP);
+                fight(enAtk, defense, enDefending, defending, enLuck, luck, enName, name, enhp, HP);
             }
             else if (move == 'defend') {
                 console.log('enemy defending');
@@ -214,21 +247,24 @@ export function createBattle(idName, winpath, losepath) {
             attackButton.classList.add('attack');
             attackButton.innerHTML = 'Attack!';
             attackButton.addEventListener('click', function() {
-                attack(atk, enDef, defendingStatus, enDefending, luck, enLuck, name, enName, HP, enhp);
+                fight(attack, enDef, defending, enDefending, luck, enLuck, name, enName, HP, enhp);
+                updateGlobalStats(defending, HP, energy);
                 createTransitionButton();
             })
             const defendButton = document.createElement('button');
             defendButton.classList.add('defend');
             defendButton.innerHTML = 'Defend';
             defendButton.addEventListener('click', function() {
-                defend(defendingStatus, name);
+                defend(defending, name);
+                updateGlobalStats(defending, HP, energy);
                 createTransitionButton();
             })
             const healButton = document.createElement('button');
             healButton.classList.add('Heal');
             healButton.innerHTML = `Heal (${healCost} Energy)`;
             healButton.addEventListener('click', function() {
-                heal(energy, healCost, HP, maxHP, luck, name, defendingStatus);
+                heal(energy, healCost, HP, maxHP, luck, name, defending);
+                updateGlobalStats(defending, HP, energy);
                 createTransitionButton();
             })
             butonDiv.appendChild(attackButton);
