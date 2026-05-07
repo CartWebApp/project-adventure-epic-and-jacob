@@ -17,6 +17,16 @@ export let name = "Guy";
 let elic = 'pizza';
 export const inventory = [];
 
+function saveGame() {
+  const saveData = {
+    player: player,
+    inventory: inventory,
+    name: name,
+
+    
+  }
+}
+
 // konami code 
 let konamiPosition = 0;
 document.addEventListener('keyup', function(e) {
