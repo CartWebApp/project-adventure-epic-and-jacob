@@ -10,8 +10,8 @@ export const textBox = document.getElementById('story');
 export const battleScreen = document.getElementById('battle');
 export const shopScreen = document.getElementById('shop');
 const konamiCode = ['ArrowUp', 'ArrowUp', 'ArrowDown', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'ArrowLeft', 'ArrowRight', 'b', 'a' ];
-import { player } from "./playerStats.js";
 import { transition } from "./movePaths.js";
+import { player } from "./playerStats.js";
 //Variables
 export let name = "Guy";
 let elic = 'pizza';

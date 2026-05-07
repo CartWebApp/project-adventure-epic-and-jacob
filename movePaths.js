@@ -7,6 +7,7 @@ import { createShop } from "./shopLogic.js";
 import { startBlackjack } from "./blackjack.js";
 import { player } from "./playerStats.js";
 let log = [];
+let results = [];
 let talons = player.talons;
 let shardCount = player.shardCount;
 
@@ -32,6 +33,9 @@ export function transition(t) {
             agressive = true;
         }
     };
+    if (branch.memory) {
+        results.push(branch.memory);
+    }
     if (branch.text) {
         let p = document.createElement('p');
         p.classList.add('dialogue');

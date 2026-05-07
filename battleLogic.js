@@ -3,8 +3,7 @@ import { transition } from "./movePaths.js";
 import { enemy } from "./enemylist.js";
 import { player } from "./playerStats.js";
 
-
-let isItMyTurnYet = true;
+let isItMyTurnYet = false;
 
 export function createBattle(idName, winpath, losepath) {
     console.log(`Battling ${idName}`);
@@ -16,11 +15,11 @@ export function createBattle(idName, winpath, losepath) {
         //stats 
         
         class fiend {
-            constructor(name, icon, atk, def, luck, defending, maxhp, hp, energy, maxenergy, healcost, actions, waste, drop) {
+            constructor(name, icon, attack, defense, luck, defending, maxhp, hp, energy, maxenergy, healcost, actions, waste, drop) {
                 this.name = name;
-                this.img;
-                this.atk = atk;
-                this.def = def;
+                this.icon = icon;
+                this.attack = attack;
+                this.defense = defense;
                 this.luck = luck;
                 this.hp = hp;
                 this.maxhp = maxhp;
@@ -110,43 +109,113 @@ export function createBattle(idName, winpath, losepath) {
             commentary.innerHTML = `${w}`;
         }
         //A = attacker stat, B = defender stat
-        function fight(aA, dB, dsA, dsB, lA, lB, nA, nB, hA, hB) {
+        function fight() {
             //BUG DISCOVERED: variables don't update after they change. Why?
             //still have no damn clue on how to make this work.
-            dsA = false;
-            if (dsB === true) {
+            player.defending = false;
+            if (foe.defending === true) {
                 //ATTACKING WHILE DEFENDING
                 console.log('BEFORE');
-                console.log(nA, hA);
-                console.log(nB, hB);
-                let damage = (Math.round(Math.random() * lB * dB/2 * 5))
-                hA = hA - damage;
-                if (hA < 0) {
-                    hA = 0;
+                console.log(name, player.HP);
+                console.log(foe.name, foe.hp);
+                let damage = (Math.round(Math.random() * foe.luck * foe.defense * 3))
+                player.HP -= damage;
+                if (player.HP < 0) {
+                    player.HP = 0;
                 }
-                dsB = false;
-                commentary.innerHTML = `${nA} attacks! But ${nB} counters and attacks for ${damage} health!`;
+                foe.defending = false;
+                commentary.innerHTML = `${attackerName} attacks! But ${attackedName} counters and attacks for ${damage} health!`;
                 console.log('AFTER');
-                console.log(nA, hA);
-                console.log(nB, hB);
+                console.log(name, player.HP);
+                console.log(foe.name, foe.hp);
                 updateStats();
                 updateHP();
             }
-            else if (dsB === false) {
+            else if (attackedDefending === false) {
                 //ATTACKING
                 console.log('BEFORE');
-                console.log(nA, hA);
-                console.log(nB, hB);
-                let damage = (Math.round(Math.random() * 5 * lA * aA/2));
-                hB = hB - damage;
-                if (hB < 0) {
-                    hB = 0;
+                console.log(attackerName, attackerHp);
+                console.log(attackedName, attackedHp);
+                let damage = (Math.round(Math.random() * 3 * player.luck * player.attack));
+                foe.hp -= damage;
+                if (attackedHp < 0) {
+                    attackedHp = 0;
                 };
-                commentary.innerHTML = `${nA} attacks! ${damage} damage dealt to opposing ${nB}!`;
+                commentary.innerHTML = `${attackerName} attacks! ${damage} damage dealt to opposing ${attackedName}!`;
                 console.log('AFTER')
-                console.log(nA, hA);
-                console.log(nB, hB);
-                return;
+                console.log(attackerName, attackerHp);
+                console.log(attackedName, attackedHp);
+            }
+        }
+
+        //ENEMY FUNCTIONS
+
+        function enDefend() {
+            console.log(`DEFENDING STATUS BEFORE: ${de}`);
+            foe.defending = true;
+            console.log(`DEFENDING STATUS AFTER: ${de}`);
+            commentary.innerHTML = `${foe.name} is on guard.`;
+        }
+        function enHeal() {
+            console.log('healing');
+            foe.defending = false;
+            if (foe.healCost <= foe.energy) {
+                const healt = (Math.round(Math.random() * 10 * foe.luck));
+                foe.hp =+ healt;
+                foe.energy -= foe.healCost;
+                if (foe.hp > foe.maxhp) {
+                    foe.hp = foe.maxhp;
+                    commentary.innerHTML = `${foe.name} fully restores thier HP!`;
+                }
+                else {
+                    commentary.innerHTML = `${foe.name} heals for ${healt} health!`;
+                }
+            }
+            else {
+                commentary.innerHTML = `${foe.name} tries to heal. But it failed!`;
+            }
+        }
+        function waste(w) {
+            commentary.innerHTML = `${w}`;
+        }
+        
+        //A = attacker stat, B = defender stat
+        function enFight() {
+            //BUG DISCOVERED: variables don't update after they change. Why?
+            //still have no damn clue on how to make this work.
+            foe.defending = false;
+            if (player.defending === true) {
+                //ATTACKING WHILE DEFENDING
+                console.log('BEFORE');
+                console.log(name, player.HP);
+                console.log(foe.name, foe.hp);
+                let damage = (Math.round(Math.random() * player.luck * player.defense * 5))
+                foe.hp -= damage;
+                if (foe.hp < 0) {
+                    foe.hp = 0;
+                }
+                player.defending = false;
+                commentary.innerHTML = `${foe.name} attacks! But ${name} counters and attacks for ${damage} health!`;
+                console.log('AFTER');
+                console.log(name, player.HP);
+                console.log(foe.name, foe.hp);
+                updateStats();
+                updateHP();
+            }
+            else if (player.defending === false) {
+                //ATTACKING
+                console.log('BEFORE');
+                console.log(name, player.HP);
+                console.log(foe.name, foe.hp, foe.luck, foe.attack);
+                let damage = (Math.round(Math.random() * 5 * foe.luck * foe.attack));
+                player.HP -= damage;
+                if (player.HP < 0) {
+                    player.HP = 0;
+                }
+                commentary.innerHTML = `${foe.name} attacks! ${damage} damage dealt to opposing ${name}!`;
+                console.log('AFTER')
+                console.log(name, player.HP);
+                console.log(foe.name, foe.hp);
             }
         }
         function enemyMove() {
@@ -154,17 +223,17 @@ export function createBattle(idName, winpath, losepath) {
             const move = foe.actions[(Math.round(Math.random() * foe.actions.length))];
             console.log(`current move: ${move}`);
             
-            if (move == 'attack') {
+            if (move === 'attack') {
                 console.log('enemy attacking');
-                fight(foe.atk, player.defense, foe.defending, player.defending, foe.luck, player.luck, foe.name, name, foe.hp, player.HP);
+                enFight();
             }
-            else if (move == 'defend') {
+            else if (move === 'defend') {
                 console.log('enemy defending');
-                defend(foe.defending, foe.name);
+                enDefend()
             }
-            else if (move == 'heal') {
+            else if (move === 'heal') {
                 console.log('enemy healing');
-                heal(foe.energy, foe.healCost, foe.hp, foe.maxhp, foe.luck, foe.name, foe.defending);
+                enHeal();
             }
             else {
                 console.log('enemy wasting time');
@@ -225,7 +294,7 @@ export function createBattle(idName, winpath, losepath) {
             attackButton.classList.add('attack');
             attackButton.innerHTML = 'Attack!';
             attackButton.addEventListener('click', function() {
-                fight(player.attack, foe.def, player.defending, foe.defending, player.luck, foe.luck, name, foe.name, player.HP, foe.hp);
+                fight(player.attack, foe.defense, player.defending, foe.defending, player.luck, foe.luck, name, foe.name, player.HP, foe.hp);
                 createTransitionButton();
             })
             const defendButton = document.createElement('button');

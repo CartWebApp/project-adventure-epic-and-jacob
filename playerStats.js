@@ -11,3 +11,23 @@ export let player = {
     defending: false,
     shardCount: 0,
 }
+
+export function updateAttack(a) {
+    player.attack = a;
+}
+
+export function updateDefense(a) {
+    player.defense = a;
+}
+
+export function updateHP(a) {
+    player.HP = a;
+}
+
+export function updatemaxHP(a) {
+    player.maxHP = a;
+}
+
+export function updateEnergy(a) {
+    player.attack = a;
+}
