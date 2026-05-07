@@ -34,6 +34,7 @@ export function transition(t) {
     };
     if (branch.text) {
         let p = document.createElement('p');
+        p.classList.add('dialogue');
         p.innerHTML = `${branch.text}`;
         textBox.appendChild(p);
         console.log(p);
@@ -163,10 +164,7 @@ submitName.addEventListener('click', function() {
 });
 
 function addToLog(branch) {
-    if (branch.text) {
-        log.push(branch.text);
-    }
-    else if (branch.type == 'battle') {
+    if (branch.type == 'battle') {
         log.push(`Entered a battle.`);
     }
     else if (branch.type == 'shop') {
@@ -179,21 +177,24 @@ function addToLog(branch) {
 }
 
 
-const logDiv = document.getElementById('textLog');
-const logDivSection = document.createElement('textLogContent');
-function displayLog() {
-    for (const thingy of log) {
-        const ul = document.createElement('ul');
+
+export function displayLog() {
+    console.log('Log function activated!');
+    const logDiv = document.getElementById('textLog');
+    const logDivSection = document.createElement('textLogContent');
+    const ul = document.createElement('ul');
+    if (log.length > 0) {
+        for (const thingy of log) {
         const event = log[thingy];
+        console.log(event);
+        console.log(thingy);
         const li = document.createElement('li');
         li.classList.add('ancientScroll');
-        li.innerHTML = event;
+        li.innerHTML = thingy;
         ul.appendChild(li);
     }
-    if (logDiv.classList.contains('hidden')) {
-        logDiv.classList.remove('hidden');
-    }
-    else {
-        logDiv.classList.add('hidden');
+    logDivSection.appendChild(ul);
+    logDiv.appendChild(logDivSection);
+    logDiv.style.display = 'block';
     }
 }

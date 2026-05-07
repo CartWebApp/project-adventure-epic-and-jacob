@@ -10,26 +10,77 @@ body {
     color: var(--amethyst);
     font-style: oblique;
     font-family: Andale Mono, monospace;
-    background-image: url(stupidimages/Background.png);
+    background-color: tan;
+    /* background-image: url(stupidimages/Background.png);
     background-size: auto 100vh;
-    background-repeat: no-repeat;
+    background-repeat: no-repeat; */
     padding: 0px;
     margin: 0px;
-    overflow-y: hidden;
+    overflow-y: scroll;
 }
 button {
     border-radius: 20px;
     padding: 5px;
 }
 
-#textLog {
-    margin: auto;
-    
+#overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: none;
+    justify-content: center;
+    align-items: center;
     z-index: 1000;
-    width: 70vw;
-    height: 70vh;
-    justify-self: center;
-    align-self: center;
+}
+
+#textLog {
+    background-color: var(--brown);
+    color: var(--white);
+    border: 1px solid white;
+    border-radius: 20px;
+    padding: 3%;
+    width: clamp(300px, 80vw, 500px);
+    height: clamp(200px, 50vh, 400px);
+    overflow-y: auto;
+}
+
+.ancientScroll {
+    background-color: var(--emerald);
+    color: var(--white);
+    padding: clamp(2px, 0.5vw, 4px) clamp(3px, 1vw, 6px);
+    margin: clamp(3px, 0.8vw, 5px);
+    border-radius: 20px;
+    font-size: clamp(11px, 1.8vw, 15px);
+}
+
+.ancientScroll:nth-child(even) {
+    background-color: var(--amethyst);
+    color: var(--white);
+}
+
+.dialogue {
+    color: white;
+    background-color: var(--brown);
+    border: 1px solid white;
+    border-radius: 20px;
+    padding: 3%;
+}
+
+#close {
+    padding: 5px 10px;
+    border-radius: 20px;
+    text-align: center;
+    background-color: var(--emerald);
+    color: var(--white);
+}
+#close:hover {
+    background-color: var(--white);
+    color: var(--emerald);
+    border: 1px solid var(--emerald);
+    cursor: crosshair;
 }
 
 #bigArrange {
@@ -136,8 +187,8 @@ progress {
     display: none;
 }
 
-#textLog {
-    
+progress {
+    width: clamp(150px, 20vw, 200px);
 }
 
 .health, .energy, .enHealth, .enEnergy {
@@ -151,11 +202,11 @@ progress {
     cursor: crosshair;
 }
 
-#attack {
+.attack {
     background-color: #FF6663;
     color: #FFF;
 }
-#attack:hover {
+.attack:hover {
     background-color: #FFF;
     color: #FF6663;
     border: #FF6663 solid 1px;
@@ -172,38 +223,28 @@ progress {
     height: 75%;
     width: 100%;
 }
-#human {
-    width: 40%;
-    border: var(--red) 1px green;
-}
-#human > img {
-    width: 50%;
-}
-#fiend {
-    width: 40%;
-}
-#field > img {
-    width: 40;
-}
 #buttonlist {
     width: 100%;
     height: 25%;
 }
-#defend {
+.defending {
+    color: blue;
+}
+.defend {
     background-color: lightblue;
     color: black;
 }
-#defend:hover {
+.defend:hover {
     background-color: darkblue;
     color: white;
     border: white solid 1px;
     cursor: crosshair;
 }
-#heal {
+.Heal {
     background-color: #70B77E;
     color: #FFF;
 }
-#heal:hover {
+.Heal:hover {
     background-color: #FFF;
     color: #70B77E;
     border: #70B77E solid 1px;
@@ -232,10 +273,54 @@ progress {
 #buttonList {
     display: flex;
     justify-content: space-around;
+    flex-wrap: wrap;
 }
+#buttonList button {
+    flex: 1 1 75%;
+    margin: 5px;
+}
+
 #commentary {
     border: 1px solid white;
     background-color: var(--amethyst);
     color: white;
     border-radius: 20px;
+}
+
+
+@media screen and (max-width: 780px) {
+    #bigArrange {
+        flex-direction: column;
+        align-items: center;
+    }
+    #log {
+        width: 80%;
+        text-align: center;
+        align-self: center;
+        margin: auto;
+    }
+    #section1 {
+        width: 100%;
+        height: 50vh;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding: 10px;
+    }
+    #stats {
+        width: 100%;
+        height: 50vh;
+        margin-bottom: 10px;
+        padding: 10px;
+    }
+    #combatants {
+        flex-direction: column;
+        align-items: center;
+    }
+    #human, #enemy {
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
 }

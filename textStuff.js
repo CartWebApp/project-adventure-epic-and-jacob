@@ -89,6 +89,19 @@ submitName.addEventListener('click', function() {
   transition('start');
 });
 
+import { displayLog } from "./movePaths.js";
+const popupOverlay = document.getElementById('overlay');
+const closeButton = document.getElementById('close');
+const logButton = document.getElementById('log');
+logButton.addEventListener('click', function() {
+    displayLog();
+    popupOverlay.style.display = 'block';
+})
+closeButton.addEventListener('click', function() {
+    const logDiv = document.getElementById('textLog');
+    popupOverlay.style.display = 'none';
+})
+
 //functions
 //branch logic
 //shoppingList
