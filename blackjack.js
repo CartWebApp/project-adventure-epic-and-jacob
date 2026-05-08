@@ -1,5 +1,6 @@
 import { transition } from "./movePaths.js";
 import { textBox } from "./textStuff.js";
+import { player } from "./playerStats.js";
 let currentBlackjackBranch = null;
 const suits = ['hearts', 'diamonds', 'clubs', 'spades'];
 const ranks = [
