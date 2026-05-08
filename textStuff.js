@@ -12,22 +12,20 @@ export const shopScreen = document.getElementById('shop');
 const konamiCode = ['ArrowUp', 'ArrowUp', 'ArrowDown', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'ArrowLeft', 'ArrowRight', 'b', 'a' ];
 import { transition } from "./movePaths.js";
 import { player } from "./playerStats.js";
+import { log, results } from "./movePaths.js";
 //Variables
 export let name = "Guy";
 let elic = 'pizza';
 export const inventory = [];
 
 // Save game state to localStorage
-export function saveGame(currentBranch, log, results, talons, shardCount) {
+export function saveGame(currentPath) {
   const saveData = {
     player,
-    inventory,
-    name,
-    currentBranch,
     log,
     results,
-    talons,
-    shardCount
+    inventory,
+    currentPath
   };
   localStorage.setItem('adventureSave', JSON.stringify(saveData));
 }
@@ -50,6 +48,7 @@ export function loadGame() {
     console.error('Failed to load save:', e);
     return null;
   }
+  transition(data.currentPath);
 }
 
 
@@ -135,11 +134,8 @@ logButton.addEventListener('click', function() {
     popupOverlay.style.display = 'block';
 })
 closeButton.addEventListener('click', function() {
-    const logDiv = document.getElementById('textLog');
     popupOverlay.style.display = 'none';
 })
 
-//functions
-//branch logic
-//shoppingList
+
 updateStats()

@@ -6,8 +6,8 @@ import { createShop } from "./shopLogic.js";
 import { updateStats, saveGame, loadGame } from "./textStuff.js";
 import { startBlackjack } from "./blackjack.js";
 import { player } from "./playerStats.js";
-let log = [];
-let results = [];
+export let log = [];
+export let results = [];
 let talons = player.talons;
 let agressive = false;
 function updateStuff() {
@@ -78,8 +78,9 @@ export function transition(t) {
                     defending: false,
                     shardCount: player.shardCount,
                 };
-                saveGame(branch, log, results, player.talons, player.shardCount)
-                updateStuff();
+                update
+                saveGame(branch, log, results, player.talons, player.shardCount);
+                updateStats();
             }
             if (path === 'dimensionSwordEnd') {
                 if (player.shardCount > 6) {

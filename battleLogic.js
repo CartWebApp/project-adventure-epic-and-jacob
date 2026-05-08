@@ -127,7 +127,6 @@ export function createBattle(idName, winpath, losepath) {
                 console.log(name, player.HP);
                 console.log(foe.name, foe.hp);
                 updateStats();
-                updateHP();
             }
             else if (foe.defending === false) {
                 //ATTACKING
@@ -160,7 +159,7 @@ export function createBattle(idName, winpath, losepath) {
             if (foe.healCost <= foe.energy) {
                 const healt = (Math.round(Math.random() * 30 * foe.luck));
                 foe.hp =+ healt;
-                foe.energy -= foe.healCost;
+                foe.energy =- foe.healCost;
                 if (foe.hp > foe.maxhp) {
                     foe.hp = foe.maxhp;
                     commentary.innerHTML = `${foe.name} fully restores thier HP!`;
@@ -254,8 +253,7 @@ export function createBattle(idName, winpath, losepath) {
                         updateEnemyStats();
                         updateStats();
                         isItMyTurnYet = !isItMyTurnYet;
-                        guyTurn();
-                        
+                        guyTurn();    
                     })
                 }
                 else {
