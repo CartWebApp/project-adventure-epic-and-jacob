@@ -214,7 +214,7 @@ export const story = {
          choiceId: ["fight2"]
      },
      fight2: {
-         type: "battle",
+         type: 'battle',
          win: 'preBattle3',
          lose: 'tournLoss'
      },

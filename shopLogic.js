@@ -16,7 +16,7 @@ export function createShop(i, leaving) {
         console.log(item);
         const fullItem = shop[i][item];
         console.log(fullItem);
-        const itemBox = document.createElement('section');
+        const itemBox = document.createElement('div');
         const textStuff = document.createElement('section');
         const buyButton = document.createElement('button');
         const itemTitle = document.createElement('h3');
@@ -28,6 +28,7 @@ export function createShop(i, leaving) {
         textStuff.classList.add('itemText');
         buyButton.innerHTML = `${fullItem.price} Talons`;
         for (const thingy of inventory) {
+            console.log(`Current item being compared: ${thingy}`)
             if (thingy === fullItem) {
                 itemBox.classList.add('bought');
                 buyButton.innerHTML = 'Bought!';
@@ -45,7 +46,7 @@ export function createShop(i, leaving) {
                     console.log(player);
                     talons -= item.price;
                     inventory.push(fullItem);
-                    increaseStats(fullItem.stat, fullItem.amount);
+                    increaseStats(fullItem);
                     console.log(player);
                     createShop(i, leaving);
                 };

@@ -61,7 +61,7 @@ export let enemy = {
     },
     sucker1: {
         name: 'Jerome the cowardly',
-        img: '#',
+        img: 'enemyFiles/jerome.png',
         attack: 1,
         defense: 8,
         luck: 1,
@@ -82,7 +82,7 @@ export let enemy = {
     },
     fight2: {
         name: 'Wallice the Great',
-        img: '#',
+        img: 'enemyFiles/great.png',
         attack: 8,
         defense: 5,
         luck: 3,
@@ -228,7 +228,7 @@ export let enemy = {
             energy: 5,
         }
     },
-    finalHouseBattle: {
+    battleFinalHouse: {
         name: 'Bystanding Citizen',
         img: '#',
         attack: 1,

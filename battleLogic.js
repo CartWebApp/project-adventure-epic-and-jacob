@@ -147,9 +147,9 @@ export function createBattle(idName, winpath, losepath) {
         //ENEMY FUNCTIONS
 
         function enDefend() {
-            console.log(`DEFENDING STATUS BEFORE: ${de}`);
+            console.log(`DEFENDING STATUS BEFORE: ${foe.defending}`);
             foe.defending = true;
-            console.log(`DEFENDING STATUS AFTER: ${de}`);
+            console.log(`DEFENDING STATUS AFTER: ${foe.defending}`);
             commentary.innerHTML = `${foe.name} is on guard.`;
         }
         function enHeal() {
