@@ -2,8 +2,18 @@
 export const story = {
     start: {
          text: 'You are a peasant, walking around the town square. You live a relatively normal life, with your main focus mainly getting by. However, little do you know, one misstep is about to change that. In the middle of your daily walk to work, you come across a vase. Tired of your boring life, you decide to kick it down. The vase shatters with a loud CLASH, breaking it into an uncountable amount of clay pieces A very furious man sees what you\'ve done and comes to you, shouting. He reveals himself to be Bill Gatesford III, the richest man in the world. He angrily informs you that the vase you had "kicked down like a peasant" was worth one million Talons. The very next day, you are confronted by some shady men. They are the debt collectors, and tell you that you have one week before you have to pay the full million you owe.',
-         choice: ['Negotiate with the collectors', 'Accept your fate and head outside to make some money', 'Slay the collectors with your dimension sword'],
-         choiceId: ['hard', 'oldEncounter', 'dimensionSwordEnd']
+         choice: ['Negotiate with the collectors', 'Accept your fate and head outside to make some money', 'Try to slay the collectors with your dimension sword'],
+         choiceId: ['hard', 'oldEncounter', 'fastBattlePrelude']
+     },
+     fastBattlePrelude: {
+        text: 'You try to pull out your sword from your Pant Hole. However, a figure fades into your view, and you start to feel isolated from everything around you. It\'s some sort of god-like figure, telling you to stop slacking off and to do work NOW!',
+        choice: ['Fight'],
+        choiceId: ['fastBattle']
+     },
+     fastBattle: {
+        type: 'battle',
+        win: 'dimensionSwordEnd',
+        lose: 'start'
      },
      hard: {
          text: 'You plead with the collectors. You tell them, \"I can\'t bring a million to you in a week. Please, can you lower the amount - or at least extend the time?\" The Collectors do not care. They start adding intrest to your debt. You now owe 1.2 million Talons It would not be wise to plead further',
@@ -58,7 +68,7 @@ export const story = {
      },
      innList: {
          text:"After looking around, you find 3 inns of note and varying quality. The first inn is ShodInn, an inn that is suffering from severe rodent problems. The price is dirt cheap, but it won't gurentee a good night of sleep The second inn, InnInn, seems pretty basic, but it doseen't cost a whole lot to stay there. The third inn, Luxre-Inn, is renouned for it's luxury. It'll cost you everything you have, but it would be well worth the price.",
-         choice: ['Sleep at ShodInn (20 talons)', 'Sleep at InnInn (150 talons)', 'Sleep at ShodInn (500 talons)'],
+         choice: ['Sleep at ShodInn (20 talons)', 'Sleep at InnInn (150 talons)', 'Sleep at luxuryInn (500 talons)'],
          choiceId: ['shodInn', 'innInn', 'luxuryInn'],
      },
      shodInn: {
@@ -702,7 +712,7 @@ export const story = {
          memory: 'Died.'
      },
      dimensionSwordEnd: {
-         text: 'From the depths of your Pants Hole, you pull out the Dimension Sword, a sword made from the 7 Dimension Shards. You valiantly take down your greedy and evil opponents, who fall with one strike. You are still in debt, but you have become the Debt Hero. You now have a new goal in life: save your fellow citizens from the evils of capitalism. You live out your days as a warrior who helps out many people, mostly for the better',
+         text: 'From the depths of your Pants Hole, you pull out the Dimension Sword, a sword made from the 7 Dimension Shards. You valiantly take down the god-like figure and all of your greedy and evil opponents, who fall with one strike. You are still in debt, but you have become the Debt Hero. You now have a new goal in life: save your fellow citizens from the evils of capitalism. You live out your days as a warrior who helps out many people, mostly for the better',
          choice: ['View your journey'],
          choiceId: ['results'],
          memory: 'Pulled out the Dimension Sword and became the Debt Hero.'

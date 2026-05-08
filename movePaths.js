@@ -195,7 +195,23 @@ window.addEventListener('DOMContentLoaded', function() {
 });
 
 function displayResults() {
+    const ol = document.createElement('ol');
+    for (let index = 0; index < results.length; index++) {
+        const tingly = results[index];
+        const li = document.createElement('li')
+        li.innerHTML = tingly;
+        li.classList.add('resultItem');
+        ol.appendChild(li);
+    }
+    textBox.appendChild(ol)
 
+    //leave button
+    const leavebtn = document.createElement('button');
+    leavebtn.classList.add('leave');
+    leavebtn.addEventListener('click', function() {
+        transition('start');
+    });
+    textBox.appendChild(leavebtn);
 }
 
 
@@ -203,7 +219,7 @@ export function displayLog() {
     console.log('Log function activated!');
     const logDiv = document.getElementById('textLog');
     const logDivSection = document.createElement('textLogContent');
-    const ul = document.createElement('ul');
+    const ol = document.createElement('ol');
     if (log.length > 0) {
         for (const thingy of log) {
         const event = log[thingy];
