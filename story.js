@@ -8,9 +8,9 @@ export const story = {
      fastBattlePrelude: {
         text: 'You try to pull out your sword from your Pant Hole. However, a figure fades into your view, and you start to feel isolated from everything around you. It\'s some sort of god-like figure, telling you to stop slacking off and to do work NOW!',
         choice: ['Fight'],
-        choiceId: ['fastBattle']
+        choiceId: ['fallback']
      },
-     fastBattle: {
+     fallback: {
         type: 'battle',
         win: 'dimensionSwordEnd',
         lose: 'start'
