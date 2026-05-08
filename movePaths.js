@@ -9,7 +9,7 @@ import { player } from "./playerStats.js";
 let log = [];
 let results = [];
 let talons = player.talons;
-
+let agressive = false;
 function updateStuff() {
     player.talons = talons;
 }
@@ -27,7 +27,7 @@ export function transition(t) {
     textBox.innerHTML = '';
     //basic story
     if (branch.trait) {
-        if (trait == 'agressive') {
+        if (branch.trait == 'agressive') {
             agressive = true;
         }
     }
@@ -66,7 +66,20 @@ export function transition(t) {
             else if (path === 'start') {
                 log = [];
                 results = [];
-                talons = 300;
+                player = {
+                    talons: 300,
+                    maxHP: 100,
+                    HP: 100,
+                    energy: 50,
+                    maxEnergy: 50,
+                    luck: 3,
+                    attack: 5,
+                    defense: 5,
+                    healCost: 20,
+                    defending: false,
+                    shardCount: player.shardCount,
+                };
+                saveGame(branch, log, results, player.talons, player.shardCount)
                 updateStuff();
             }
             if (path === 'dimensionSwordEnd') {
@@ -132,16 +145,16 @@ export function transition(t) {
     };
     // Update talons if the branch has a talons property
     if (branch.talons !== undefined) {
-        talons += branch.talons;
+        player.talons += branch.talons;
         updateStats();
     }
     // Update maxHP if the branch has a maxHP property
     if (branch.maxHP !== undefined) {
-        maxHP += branch.maxHP;
+        player.maxHP += branch.maxHP;
     }
     // Update maxEnergy if the branch has a maxEnergy property
     if (branch.maxEnergy !== undefined) {
-        maxEnergy += branch.maxEnergy;
+        player.maxEnergy += branch.maxEnergy;
     }
     if (branch.type == 'battle') {
         const winPath = branch.win;
@@ -152,8 +165,8 @@ export function transition(t) {
         startBlackjack(branch);
     };   
     if (branch.type == 'heal') {
-        HP = maxHP;
-        energy = maxEnergy;
+        player.HP = player.maxHP;
+        player.energy = maxEnergy;
         console.log('Full heal!')
     }
     if (branch.type == 'shop') {
