@@ -88,7 +88,7 @@ export function createBattle(idName, winpath, losepath) {
         function heal() {
             player.defending = false;
             if (player.healCost <= player.energy) {
-                const healt = (Math.round(Math.random() * 10 * player.luck));
+                const healt = (Math.round(Math.random() * 40 * player.luck));
                 player.HP += healt;
                 player.energy -= player.healCost;
                 if (player.HP > player.maxHP) {
@@ -156,7 +156,7 @@ export function createBattle(idName, winpath, losepath) {
             console.log('healing');
             foe.defending = false;
             if (foe.healCost <= foe.energy) {
-                const healt = (Math.round(Math.random() * 10 * foe.luck));
+                const healt = (Math.round(Math.random() * 30 * foe.luck));
                 foe.hp =+ healt;
                 foe.energy -= foe.healCost;
                 if (foe.hp > foe.maxhp) {
