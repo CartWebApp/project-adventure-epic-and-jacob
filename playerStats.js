@@ -11,3 +11,4 @@ export let player = {
     defending: false,
     shardCount: 0,
 }
+window.player = player;
