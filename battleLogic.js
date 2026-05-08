@@ -120,7 +120,7 @@ export function createBattle(idName, winpath, losepath) {
                     player.HP = 0;
                 }
                 foe.defending = false;
-                commentary.innerHTML = `${attackerName} attacks! But ${attackedName} counters and attacks for ${damage} health!`;
+                commentary.innerHTML = `${name} attacks! But ${foe.name} counters and attacks for ${damage} health!`;
                 console.log('AFTER');
                 console.log(name, player.HP);
                 console.log(foe.name, foe.hp);
