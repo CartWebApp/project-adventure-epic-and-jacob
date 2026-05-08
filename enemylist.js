@@ -29,6 +29,9 @@ export let enemy = {
         defending: false,
         maxhp: 100,
         hp: 100,
+        energy: 20,
+        maxenergy: 20,
+        healCost: 20,
         actions: ['attack', 'defend', 'waste'],
         waste: 'The rats gather in a circle to form a plan.',
         drop: {
@@ -58,6 +61,7 @@ export let enemy = {
     },
     sucker1: {
         name: 'Jerome the cowardly',
+        img: '#',
         attack: 1,
         defense: 8,
         luck: 1,
@@ -78,6 +82,7 @@ export let enemy = {
     },
     fight2: {
         name: 'Wallice the Great',
+        img: '#',
         attack: 8,
         defense: 5,
         luck: 3,
@@ -98,6 +103,7 @@ export let enemy = {
     },
     fight3: {
         name: 'Primo the Brawler',
+        img: '#',
         attack: 9,
         defense: 6,
         luck: 1,
@@ -118,6 +124,7 @@ export let enemy = {
     },
     battle4Tourn: {
         name: 'Old Man',
+        img: 'enemyFiles/oldman.png',
         attack: 10,
         defense: 7,
         luck: 4,
@@ -132,6 +139,7 @@ export let enemy = {
     },
     mountainMan: {
         name: 'Old Man',
+        img: 'enemyFiles/oldman.png',
         attack: 11,
         defense: 10,
         luck: 4,
@@ -146,6 +154,7 @@ export let enemy = {
     },
     fightBoss: {
         name: 'Big Cheese, the Boss',
+        img: 'enemyFiles/bigCheese.png',
         attack: 4,
         defense: 2,
         luck: 2,
@@ -160,6 +169,7 @@ export let enemy = {
     },
     mountainSkelly: {
         name: 'Old Man',
+        img: 'enemyFiles/oldman.png',
         attack: 6,
         defense: 1,
         luck: 7,
@@ -180,6 +190,7 @@ export let enemy = {
     },
     forcemoney: {
         name: 'Common housecitizen',
+        img: '#',
         attack: 1,
         defense: 8,
         luck: 1,
@@ -199,6 +210,7 @@ export let enemy = {
     },
     battleHouse2: {
         name: 'Friendly Neighbor',
+        img: '#',
         attack: 1,
         defense: 4,
         luck: 1,
@@ -218,6 +230,7 @@ export let enemy = {
     },
     finalHouseBattle: {
         name: 'Bystanding Citizen',
+        img: '#',
         attack: 1,
         defense: 1,
         luck: 1,
@@ -238,6 +251,7 @@ export let enemy = {
     },
     heroCheese: {
         name: 'The Big Cheese (Hero)',
+        img: 'enemyFiles/bigCheese.png',
         attack: 5,
         defense: 10,
         luck: 3,
@@ -252,6 +266,7 @@ export let enemy = {
     },
     smallCheese: {
         name: 'The Big Cheese',
+        img: 'enemyFiles/bigCheese.png',
         attack: 3,
         defense: 5,
         luck: 3,
@@ -272,6 +287,7 @@ export let enemy = {
     },
     angryBoss: {
         name: 'The Big Cheese',
+        img: 'enemyFiles/bigCheese.png',
         attack: 3,
         defense: 8,
         luck: 2,

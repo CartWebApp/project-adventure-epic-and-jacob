@@ -75,6 +75,9 @@ button {
     text-align: center;
     background-color: var(--emerald);
     color: var(--white);
+    display: block;
+    align-self: center;
+    justify-self: center;
 }
 #close:hover {
     background-color: var(--white);
@@ -132,14 +135,49 @@ nav {
     width: clamp(120px, 30vw, 200px);
     height: clamp(40px, 8vh, 55px);
     font-size: clamp(14px, 3vw, 25px);
+    display: none;
 }
+
+
+
 .choices {
     display: flex;
+}
+
+.bought, .unbought {
+    padding: clamp(2px, 0.5vw, 3px) clamp(3px, 0.8vw, 5px);
+    margin: clamp(3px, 0.8vw, 5px);
+    width: clamp(25%, 30vw, 40%);
+    border-radius: 20px;
+    font-size: clamp(11px, 1.8vw, 15px);
+}
+
+.bought {
+    background-color: var(--amethyst);
+    color: var(--white);
+}
+
+.unbought {
+    color: var(--amethyst);
+    border-color: 1px solid black;
+    order: 2;
 }
 
 .SWORD {
     background-color: purple;
     color: var(--white);
+    padding: clamp(2px, 0.5vw, 3px) clamp(3px, 0.8vw, 5px);
+    margin: clamp(3px, 0.8vw, 5px);
+    border-radius: 20px;
+    font-size: clamp(11px, 1.8vw, 15px);
+}
+
+.leavebtn {
+    background-color: var(--red);
+    color: var(--white);
+    display: block;
+    justify-content: center;
+    width: clamp(25%, 30vw, 40%);
     padding: clamp(2px, 0.5vw, 3px) clamp(3px, 0.8vw, 5px);
     margin: clamp(3px, 0.8vw, 5px);
     border-radius: 20px;
@@ -269,6 +307,7 @@ progress {
 #combatants {
     display: flex;
     justify-content: space-between;
+    width: 100%;
 }
 #buttonList {
     display: flex;
