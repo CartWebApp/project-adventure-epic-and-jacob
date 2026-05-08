@@ -59,7 +59,7 @@ export function transition(t) {
             const path = branch.choiceId[index];
             console.log(btnText);
             console.log(path);
-            if (path === 'results') {
+            if (branch == 'results') {
                 player.shardCount++;
                 console.log(`shard added: ${player.shardCount}`)
             }
@@ -157,9 +157,7 @@ export function transition(t) {
         player.maxEnergy += branch.maxEnergy;
     }
     if (branch.type == 'battle') {
-        const winPath = branch.win;
-        const losePath = branch.lose;
-        createBattle(t, winPath, losePath);
+        createBattle(t, branch.win, branch.lose);
     };
     if (branch.type == 'blackjack') {
         startBlackjack(branch);
@@ -204,7 +202,7 @@ window.addEventListener('DOMContentLoaded', function() {
         log = save.log || [];
         results = save.results || [];
         talons = save.talons || player.talons;
-        shardCount = save.shardCount || player.shardCount;
+        player.shardCount = save.shardCount || player.shardCount;
         currentBranch = save.currentBranch || 'start';
         transition(currentBranch);
     }

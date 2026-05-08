@@ -5,13 +5,13 @@ import { player } from "./playerStats.js";
 
 let isItMyTurnYet = false;
 
+const commentary = document.getElementById('commentary');
+const butonDiv = document.getElementById('buttonList');
+const humanImg = document.getElementById('humanPic');
+const enemyImg = document.getElementById('enemyPic');
+
 export function createBattle(idName, winpath, losepath) {
     console.log(`Battling ${idName}`);
-    //boring dom stuff
-    const commentary = document.getElementById('commentary');
-    const butonDiv = document.getElementById('buttonList');
-    const humanImg = document.getElementById('humanPic');
-    const enemyImg = document.getElementById('enemyPic');
         //stats 
         
         class fiend {
@@ -32,8 +32,10 @@ export function createBattle(idName, winpath, losepath) {
                 this.drop = drop;
             }
         }
+        console.log(fiend)
         let foe = new fiend(...Object.values(enemy[idName]));
         console.log(foe);
+        console.log(`Current foe: ${foe}`);
 
         if (foe.img != '#') {
             enemyImg.src = foe.img;
