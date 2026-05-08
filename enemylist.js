@@ -103,7 +103,7 @@ export let enemy = {
     },
     fight3: {
         name: 'Primo the Brawler',
-        img: '#',
+        img: 'enemyFiles/semifinalist.png',
         attack: 9,
         defense: 6,
         luck: 1,
@@ -168,8 +168,8 @@ export let enemy = {
         waste: 'Big Cheese talks about how you don\'t want to mess with him.',
     },
     mountainSkelly: {
-        name: 'Old Man',
-        img: 'enemyFiles/oldman.png',
+        name: 'Skeleton',
+        img: 'enemyFiles/skeleton.png',
         attack: 6,
         defense: 1,
         luck: 7,
