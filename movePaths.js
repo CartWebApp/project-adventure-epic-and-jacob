@@ -1,7 +1,7 @@
 export const textBox = document.getElementById('story');
 export const battleScreen = document.getElementById('battle');
 import { story } from "./story.js";
-import { updateStats, saveGame, loadGame } from "./textStuff.js";
+import { updateStats } from "./textStuff.js";
 import { createBattle } from "./battleLogic.js";
 import { createShop } from "./shopLogic.js";
 import { startBlackjack } from "./blackjack.js";
@@ -9,13 +9,9 @@ import { player } from "./playerStats.js";
 let log = [];
 let results = [];
 let talons = player.talons;
-let shardCount = player.shardCount;
-let currentBranch = 'start';
-let blackjackCount = 0;
 
 function updateStuff() {
     player.talons = talons;
-    player.shardCount = shardCount;
 }
 
 export function transition(t) {
@@ -25,16 +21,6 @@ export function transition(t) {
         textBox.removeChild(battleScreen);
     }
     const branch = story[`${t}`];
-    currentBranch = t;
-    // Track blackjack play count and reroute
-    if (t === 'blackjack') {
-        blackjackCount++;
-    } else if (t === 'blackjackWin' || t === 'blackjackLose') {
-        // Do not reset count, wait for next blackjack
-    } else {
-        // Reset if leaving blackjack loop
-        blackjackCount = 0;
-    }
     addToLog(branch);
     console.log(branch);
     console.log(branch.text);
@@ -44,7 +30,7 @@ export function transition(t) {
         if (trait == 'agressive') {
             agressive = true;
         }
-    };
+    }
     if (branch.memory) {
         results.push(branch.memory);
     }
@@ -70,23 +56,22 @@ export function transition(t) {
         btnArr.classList.add('choices');
         for (let index = 0; index < branch.choice.length; index++) {
             const btnText = branch.choice[index];
-            let path = branch.choiceId[index];
-            if (path === 'blackjack' && (btnText.toLowerCase().includes('again') || btnText.toLowerCase().includes('play'))) {
-                if (currentBranch === 'blackjackWin' && blackjackCount === 3) {
-                    path = 'blackjackWin3';
-                } else if (currentBranch === 'blackjackLose' && blackjackCount === 3) {
-                    path = 'blackjackLose2';
-                }
-            }
+            const path = branch.choiceId[index];
             console.log(btnText);
             console.log(path);
             if (path === 'results') {
-                shardCount++;
-                console.log(`shard added: ${shardCount}`)
+                player.shardCount++;
+                console.log(`shard added: ${player.shardCount}`)
+            }
+            else if (path === 'start') {
+                log = [];
+                results = [];
+                talons = 300;
+                updateStuff();
             }
             if (path === 'dimensionSwordEnd') {
-                if (shardCount > 6) {
-                    console.log(`Shard path created at ${shardCount}`)
+                if (player.shardCount > 6) {
+                    console.log(`Shard path created at ${player.shardCount}`)
                     const button = document.createElement('button');
                     button.classList.add('SWORD')
                     button.addEventListener('click', function() {
@@ -96,11 +81,12 @@ export function transition(t) {
                     btnArr.appendChild(button);
                     console.log(btnArr);
                 }
-                else if (shardCount < 6) {
+                else if (player.shardCount < 6) {
                     console.log('There never was a dimensionSword!')
                 }
             }
-        if (path === 'unquotaAggro') {
+
+            else if (path === 'unquotaAggro') {
             if (agressive) {
                 const button = document.createElement('button');
                 button.addEventListener('click', function() {
@@ -141,9 +127,9 @@ export function transition(t) {
             btnArr.appendChild(button);
             console.log(btnArr);
             updateStuff()
-        }
+        }}
         textBox.appendChild(btnArr);
-    }
+    };
     // Update talons if the branch has a talons property
     if (branch.talons !== undefined) {
         talons += branch.talons;
@@ -164,8 +150,7 @@ export function transition(t) {
     };
     if (branch.type == 'blackjack') {
         startBlackjack(branch);
-        return;
-    }
+    };   
     if (branch.type == 'heal') {
         HP = maxHP;
         energy = maxEnergy;
@@ -175,27 +160,12 @@ export function transition(t) {
         createShop(branch.inventory, branch.leave);
     }
     updateStats();
-    // Save after every transition
-    saveGame(currentBranch, log, results, talons, shardCount);
-}
 }
 
 
 const nameEntry = document.getElementById('nameEnterer');
 const submitName = document.getElementById('enterName');
-// Load game if it exists, otherwise start new
-window.addEventListener('DOMContentLoaded', function() {
-    const save = loadGame();
-    if (save) {
-        log = save.log || [];
-        results = save.results || [];
-        talons = save.talons || player.talons;
-        shardCount = save.shardCount || player.shardCount;
-        currentBranch = save.currentBranch || 'start';
-        transition(currentBranch);
-    }
-});
-// Name entry
+//same thing but for the name since you only need it once
 submitName.addEventListener('click', function() {
     name = nameEntry.value || 'Guy';
     console.log(name);

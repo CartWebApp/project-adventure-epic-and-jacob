@@ -15,9 +15,9 @@ export function createBattle(idName, winpath, losepath) {
         //stats 
         
         class fiend {
-            constructor(name, icon, attack, defense, luck, defending, maxhp, hp, energy, maxenergy, healcost, actions, waste, drop) {
+            constructor(name, img, attack, defense, luck, defending, maxhp, hp, energy, maxenergy, healcost, actions, waste, drop) {
                 this.name = name;
-                this.icon = icon;
+                this.img = img;
                 this.attack = attack;
                 this.defense = defense;
                 this.luck = luck;
@@ -27,7 +27,6 @@ export function createBattle(idName, winpath, losepath) {
                 this.maxenergy = maxenergy;
                 this.energy = energy;
                 this.actions = actions;
-                this.icon = icon;
                 this.waste = waste;
                 this.defending = defending;
                 this.drop = drop;
@@ -36,8 +35,8 @@ export function createBattle(idName, winpath, losepath) {
         let foe = new fiend(...Object.values(enemy[idName]));
         console.log(foe);
 
-        if (foe.icon != null) {
-            enemyImg.src = foe.icon;
+        if (foe.img != '#') {
+            enemyImg.src = foe.img;
         }
         else {
             enemyImg.src = enemy['fallback'].img;
@@ -80,33 +79,30 @@ export function createBattle(idName, winpath, losepath) {
             }
         }
         //attack, defend, heal, and waste turn (enemy only)
-        function defend(de, n) {
-            console.log(`DEFENDING STATUS BEFORE: ${de}`);
-            de = true;
-            console.log(`DEFENDING STATUS AFTER: ${de}`);
-            commentary.innerHTML = `${n} is on guard.`;
+        function defend() {
+            console.log(`DEFENDING STATUS BEFORE: ${player.defending}`);
+            player.defending = true;
+            console.log(`DEFENDING STATUS AFTER: ${player.defending}`);
+            commentary.innerHTML = `${name} is on guard.`;
         }
-        function heal(e, c, h, m, l, n, d) {
-            console.log(e, c, h, m, l, n, d);
-            d = false;
-            if (c >= e) {
-                const healt = (Math.round(Math.random() * 10 * l));
-                h =+ healt;
-                e -= c;
-                if (h > m) {
-                    h = m;
-                    commentary.innerHTML = `${n} fully restores thier HP!`;
+        function heal() {
+            player.defending = false;
+            if (player.healCost <= player.energy) {
+                const healt = (Math.round(Math.random() * 10 * player.luck));
+                player.HP += healt;
+                player.energy -= player.healCost;
+                if (player.HP > player.maxHP) {
+                    player.HP = player.maxHP;
+                    commentary.innerHTML = `${name} fully restores their HP!`;
                 }
                 else {
-                    commentary.innerHTML = `${n} heals for ${healt} health!`;
+                    commentary.innerHTML = `${name} heals for ${healt} health!`;
                 }
+                updateStats();
             }
             else {
-                commentary.innerHTML = `${n} tries to heal. But it failed!`;
+                commentary.innerHTML = `${name} tries to heal. But it failed!`;
             }
-        }
-        function waste(w) {
-            commentary.innerHTML = `${w}`;
         }
         //A = attacker stat, B = defender stat
         function fight() {
@@ -131,20 +127,20 @@ export function createBattle(idName, winpath, losepath) {
                 updateStats();
                 updateHP();
             }
-            else if (attackedDefending === false) {
+            else if (foe.defending === false) {
                 //ATTACKING
                 console.log('BEFORE');
-                console.log(attackerName, attackerHp);
-                console.log(attackedName, attackedHp);
+                console.log(name, player.HP);
+                console.log(foe.name, foe.hp);
                 let damage = (Math.round(Math.random() * 3 * player.luck * player.attack));
                 foe.hp -= damage;
-                if (attackedHp < 0) {
-                    attackedHp = 0;
+                if (foe.hp < 0) {
+                    foe.hp = 0;
                 };
-                commentary.innerHTML = `${attackerName} attacks! ${damage} damage dealt to opposing ${attackedName}!`;
+                commentary.innerHTML = `${name} attacks! ${damage} damage dealt to opposing ${foe.name}!`;
                 console.log('AFTER')
-                console.log(attackerName, attackerHp);
-                console.log(attackedName, attackedHp);
+                console.log(name, player.HP);
+                console.log(foe.name, foe.hp);
             }
         }
 
@@ -272,6 +268,20 @@ export function createBattle(idName, winpath, losepath) {
             else if (foe.hp == 0) {
                 console.log('battle won!');
                 commentary.innerHTML = `You beat ${foe.name}!`
+                if (foe.drop.attack) {
+                    player.attack += foe.drop.attack;
+                }
+                if (foe.drop.defense) {
+                    player.defense += foe.drop.defense;
+                }
+                if (foe.drop.hp) {
+                    player.maxHP += foe.drop.hp;
+                    player.HP += foe.drop.hp;
+                }
+                if (foe.drop.energy) {
+                    player.maxEnergy += foe.drop.energy;
+                    player.energy += foe.drop.energy;
+                }
                 stuff.addEventListener('click', function() {
                     transition(winpath);
                 })
@@ -314,20 +324,6 @@ export function createBattle(idName, winpath, losepath) {
             butonDiv.appendChild(attackButton);
             butonDiv.appendChild(defendButton);
             butonDiv.appendChild(healButton);
-
-            //DEBUG ONLY - REMOVE WHEN THE BATTLE FUNCTION IS ACTUALLY FIXED
-            const winbtn = document.createElement('button');
-            const losebtn = document.createElement('button');
-            winbtn.innerHTML = "Win Match (Debug option until battles are fully fleshed out)";
-            losebtn.innerHTML = "Lose Match (Debug option until battles are fully fleshed out)";
-            winbtn.addEventListener('click', function() {
-                transition(winpath);
-            })
-            losebtn.addEventListener('click', function() {
-                transition(losepath);
-            })
-            butonDiv.appendChild(winbtn);
-            butonDiv.appendChild(losebtn);
         }
         guyTurn();
 }

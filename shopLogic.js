@@ -1,5 +1,7 @@
+import { player } from "./playerStats.js";
 import { shop } from "./shopitems.js";
-import { inventory, textBox } from "./textStuff.js";
+import { transition } from "./movePaths.js";
+import { inventory, textBox, updateStats } from "./textStuff.js";
 
 export function createShop(i, leaving) {
     //use the key function to create a shop here.
@@ -24,6 +26,7 @@ export function createShop(i, leaving) {
         textStuff.appendChild(itemTitle);
         textStuff.appendChild(itemDesc);
         textStuff.classList.add('itemText');
+        buyButton.innerHTML = `${fullItem.price} Talons`;
         for (const thingy of inventory) {
             if (thingy === fullItem) {
                 itemBox.classList.add('bought');
@@ -36,9 +39,14 @@ export function createShop(i, leaving) {
                 }
                 buyButton.innerHTML = `${item.price} Talons`;
             }
-            itemBox.addEventListener('click', function() {
+            buyButton.addEventListener('click', function() {
                 if (talons >= item.price) {
-                    buyItem(item);
+                    console.log('bought item');
+                    console.log(player);
+                    talons -= item.price;
+                    inventory.push(fullItem);
+                    increaseStats(fullItem.stat, fullItem.amount);
+                    console.log(player);
                     createShop(i, leaving);
                 };
             })
@@ -51,9 +59,31 @@ export function createShop(i, leaving) {
     }
     const leavebutton = document.createElement('button');
     leavebutton.innerHTML = 'Leave';
-    leavebutton.classList.add = 'leavebtn';
+    leavebutton.classList.add('leavebtn');
     textBox.appendChild(shopItems);
+    textBox.appendChild(leavebutton);
     leavebutton.addEventListener('click', function() {
         transition(leaving);
     });
+}
+
+function increaseStats(stat, amount) {
+    if (stat === 'attack') {
+        player.attack += amount;
+    }
+    if (stat === 'defense') {
+        player.defense += amount;
+    }
+    if (stat === 'luck') {
+        player.luck += amount;
+    }
+    if (stat === 'maxHP') {
+        player.maxHP += amount;
+        player.HP += amount;
+    }
+    if (stat === 'maxEnergy') {
+        player.maxEnergy += amount;
+        player.energy += amount;
+    }
+    updateStats();
 }

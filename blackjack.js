@@ -55,12 +55,11 @@ function calculateScore(hand) {
     let aces = hand.filter(card => card.value === 11);
     console.log(score, aces)
     if (score > 21 && aces > 0) {
-        // Each ace can be worth 1 instead of 11 (reduce by 10)
-        for (let i = 0; i < aces.length; i++) {
+        aces.forEach( () => {
+            console.log('adjusting ace value')
             score -= 10;
-            if (score <= 21) break;
-        }
-    }
+        }// aces--;
+    )};
     return score;
 }
 

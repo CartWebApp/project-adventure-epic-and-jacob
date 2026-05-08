@@ -17,38 +17,13 @@ export let name = "Guy";
 let elic = 'pizza';
 export const inventory = [];
 
-// Save game state to localStorage
-export function saveGame(currentBranch, log, results, talons, shardCount) {
+function saveGame() {
   const saveData = {
-    player,
-    inventory,
-    name,
-    currentBranch,
-    log,
-    results,
-    talons,
-    shardCount
-  };
-  localStorage.setItem('adventureSave', JSON.stringify(saveData));
-}
+    player: player,
+    inventory: inventory,
+    name: name,
 
-// Load game state from localStorage
-export function loadGame() {
-  const save = localStorage.getItem('adventureSave');
-  if (!save) return null;
-  try {
-    const data = JSON.parse(save);
-    // Restore player fields
-    Object.assign(player, data.player);
-    inventory.length = 0;
-    if (Array.isArray(data.inventory)) {
-      data.inventory.forEach(item => inventory.push(item));
-    }
-    name = data.name || name;
-    return data;
-  } catch (e) {
-    console.error('Failed to load save:', e);
-    return null;
+    
   }
 }
 
@@ -65,7 +40,6 @@ console.log (e.key)
       konamiPosition = 0;
     }
   } else {
-
     konamiPosition = 0;
   }
 });
@@ -122,6 +96,7 @@ submitName.addEventListener('click', function() {
   name = nameEntry.value || 'Guy';
   console.log(name);
   transition('start');
+  logButton.style.display = 'block';
 });
 
 import { displayLog } from "./movePaths.js";
