@@ -21,7 +21,6 @@ export function transition(t) {
         textBox.removeChild(battleScreen);
     }
     const branch = story[`${t}`];
-    addToLog(branch);
     console.log(branch);
     console.log(branch.text);
     textBox.innerHTML = '';
@@ -183,19 +182,6 @@ submitName.addEventListener('click', function() {
     console.log(name);
     transition('start');
 });
-
-function addToLog(branch) {
-    if (branch.type == 'battle') {
-        log.push(`Entered a battle.`);
-    }
-    else if (branch.type == 'shop') {
-        log.push('Entered a shop');
-    }
-    else if (branch.type == 'blackjack') {
-        log.push('Started a game of blackjack');
-    }
-    console.log(log);
-}
 window.addEventListener('DOMContentLoaded', function() {
     const save = loadGame();
     if (save) {
@@ -207,6 +193,10 @@ window.addEventListener('DOMContentLoaded', function() {
         transition(currentBranch);
     }
 });
+
+function displayResults() {
+
+}
 
 
 export function displayLog() {
