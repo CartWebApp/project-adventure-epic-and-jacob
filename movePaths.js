@@ -1,9 +1,9 @@
 export const textBox = document.getElementById('story');
 export const battleScreen = document.getElementById('battle');
 import { story } from "./story.js";
-import { updateStats } from "./textStuff.js";
 import { createBattle } from "./battleLogic.js";
 import { createShop } from "./shopLogic.js";
+import { updateStats, saveGame, loadGame } from "./textStuff.js";
 import { startBlackjack } from "./blackjack.js";
 import { player } from "./playerStats.js";
 let log = [];
@@ -160,6 +160,7 @@ export function transition(t) {
         createShop(branch.inventory, branch.leave);
     }
     updateStats();
+    saveGame(branch, log, results, player.talons, player.shardCount);
 }
 
 
@@ -184,7 +185,17 @@ function addToLog(branch) {
     }
     console.log(log);
 }
-
+window.addEventListener('DOMContentLoaded', function() {
+    const save = loadGame();
+    if (save) {
+        log = save.log || [];
+        results = save.results || [];
+        talons = save.talons || player.talons;
+        shardCount = save.shardCount || player.shardCount;
+        currentBranch = save.currentBranch || 'start';
+        transition(currentBranch);
+    }
+});
 
 
 export function displayLog() {

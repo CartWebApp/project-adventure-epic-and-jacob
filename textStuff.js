@@ -17,15 +17,42 @@ export let name = "Guy";
 let elic = 'pizza';
 export const inventory = [];
 
-function saveGame() {
+// Save game state to localStorage
+export function saveGame(currentBranch, log, results, talons, shardCount) {
   const saveData = {
-    player: player,
-    inventory: inventory,
-    name: name,
+    player,
+    inventory,
+    name,
+    currentBranch,
+    log,
+    results,
+    talons,
+    shardCount
+  };
+  localStorage.setItem('adventureSave', JSON.stringify(saveData));
+}
 
-    
+// Load game state from localStorage
+export function loadGame() {
+  const save = localStorage.getItem('adventureSave');
+  if (!save) return null;
+  try {
+    const data = JSON.parse(save);
+    // Restore player fields
+    Object.assign(player, data.player);
+    inventory.length = 0;
+    if (Array.isArray(data.inventory)) {
+      data.inventory.forEach(item => inventory.push(item));
+    }
+    name = data.name || name;
+    return data;
+  } catch (e) {
+    console.error('Failed to load save:', e);
+    return null;
   }
 }
+
+
 
 // konami code 
 let konamiPosition = 0;
