@@ -1,7 +1,7 @@
 import { player } from "./playerStats.js";
 import { shop } from "./shopitems.js";
 import { transition } from "./movePaths.js";
-import { inventory, textBox, updateStats } from "./textStuff.js";
+import { inventory, textBox, updateStats, saveGame } from "./textStuff.js";
 
 export function createShop(i, leaving) {
     //use the key function to create a shop here.

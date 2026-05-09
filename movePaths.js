@@ -8,11 +8,7 @@ import { startBlackjack } from "./blackjack.js";
 import { player } from "./playerStats.js";
 export let log = [];
 export let results = [];
-let talons = player.talons;
 let agressive = false;
-function updateStuff() {
-    player.talons = talons;
-}
 
 export function transition(t) {
     // Update stats display
@@ -58,30 +54,7 @@ export function transition(t) {
             const path = branch.choiceId[index];
             console.log(btnText);
             console.log(path);
-            if (branch == 'results') {
-                player.shardCount++;
-                console.log(`shard added: ${player.shardCount}`)
-            }
-            else if (path === 'start') {
-                log = [];
-                results = [];
-                player = {
-                    talons: 300,
-                    maxHP: 100,
-                    HP: 100,
-                    energy: 50,
-                    maxEnergy: 50,
-                    luck: 3,
-                    attack: 5,
-                    defense: 5,
-                    healCost: 20,
-                    defending: false,
-                    shardCount: player.shardCount,
-                };
-                update
-                saveGame(branch, log, results, player.talons, player.shardCount);
-                updateStats();
-            }
+
             if (path === 'dimensionSwordEnd') {
                 if (player.shardCount > 6) {
                     console.log(`Shard path created at ${player.shardCount}`)
@@ -90,7 +63,7 @@ export function transition(t) {
                     button.addEventListener('click', function() {
                         transition(path);
                     });
-                    button.innerHTML =  btnText;
+                    button.innerHTML = btnText;
                     btnArr.appendChild(button);
                     console.log(btnArr);
                 }
@@ -98,49 +71,48 @@ export function transition(t) {
                     console.log('There never was a dimensionSword!')
                 }
             }
-
             else if (path === 'unquotaAggro') {
-            if (agressive) {
-                const button = document.createElement('button');
-                button.addEventListener('click', function() {
-                    transition(path);
-                })
-                button.innerHTML =  btnText;
-                btnArr.appendChild(button);
-                console.log(btnArr);
+                if (agressive) {
+                    const button = document.createElement('button');
+                    button.addEventListener('click', function() {
+                        transition(path);
+                    })
+                    button.innerHTML = btnText;
+                    btnArr.appendChild(button);
+                    console.log(btnArr);
+                }
+                else {
+                    const button = document.createElement('button');
+                    button.addEventListener('click', function() {
+                        transition('unquotaNice');
+                    });
+                    button.innerHTML = btnText;
+                    btnArr.appendChild(button);
+                    console.log(btnArr);
+                }
+            }
+            else if (path === 'unquotaNice') {
+                if (!agressive) {
+                    const button = document.createElement('button');
+                    button.addEventListener('click', function() {
+                        transition(path);
+                    });
+                    button.innerHTML = btnText;
+                    btnArr.appendChild(button);
+                    console.log(btnArr);
+                }
             }
             else {
                 const button = document.createElement('button');
                 button.addEventListener('click', function() {
-                    transition('unquotaNice');
-                });
-                button.innerHTML =  btnText;
-                btnArr.appendChild(button);
-                console.log(btnArr);
-            }
-        }
-        if (path === 'unquotaNice') {
-            if (!agressive) {
-                const button = document.createElement('button');
-                button.addEventListener('click', function() {
                     transition(path);
                 });
-                button.innerHTML =  btnText;
+                button.innerHTML = btnText;
+                button.classList.add('choice')
                 btnArr.appendChild(button);
                 console.log(btnArr);
             }
         }
-        else {
-            const button = document.createElement('button');
-            button.addEventListener('click', function() {
-                transition(path);
-            });
-            button.innerHTML =  btnText;
-            button.classList.add('choice')
-            btnArr.appendChild(button);
-            console.log(btnArr);
-            updateStuff()
-        }}
         textBox.appendChild(btnArr);
     };
     // Update talons if the branch has a talons property
@@ -161,18 +133,23 @@ export function transition(t) {
     };
     if (branch.type == 'blackjack') {
         startBlackjack(branch);
-    };   
+    };
     if (branch.type == 'heal') {
         player.HP = player.maxHP;
-        player.energy = maxEnergy;
+        player.energy = player.maxEnergy;
         console.log('Full heal!')
     }
     if (branch.type == 'shop') {
         createShop(branch.inventory, branch.leave);
     }
     updateStats();
-    saveGame(branch, log, results, player.talons, player.shardCount);
+    saveGame(t, log, results);
 }
+
+
+
+
+
 
 
 const nameEntry = document.getElementById('nameEnterer');
@@ -182,17 +159,6 @@ submitName.addEventListener('click', function() {
     name = nameEntry.value || 'Guy';
     console.log(name);
     transition('start');
-});
-window.addEventListener('DOMContentLoaded', function() {
-    const save = loadGame();
-    if (save) {
-        log = save.log || [];
-        results = save.results || [];
-        talons = save.talons || player.talons;
-        player.shardCount = save.shardCount || player.shardCount;
-        currentBranch = save.currentBranch || 'start';
-        transition(currentBranch);
-    }
 });
 
 function displayResults() {

@@ -112,7 +112,7 @@ export function updateStats() {
 // ===== Save / Load =====
 export function saveGame(currentPath, log, results) {
   const saveData = {
-    player,
+    player: { ...player },
     inventory,
     currentPath,
     name,
@@ -137,6 +137,7 @@ export function loadGame() {
     }
 
     name = data.name || name;
+    updateStats();
     return data;
   } catch (e) {
     console.error('Failed to load save:', e);
