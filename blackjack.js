@@ -1,205 +1,204 @@
 import { transition } from "./movePaths.js";
 import { textBox } from "./textStuff.js";
-import { player } from "./playerStats.js";
+
 let currentBlackjackBranch = null;
-let blackjackWinStreak = 0;
-let blackjackLoseStreak = 0;
+
+// We want: blackjack scene plays ONCE per round.
+// The story nodes themselves (win/keepWinning/win3/lose/lose2) decide whether to re-enter.
+let roundWinCount = 0; // 0..2 so that third win advances to win3
+let roundLoseCount = 0; // counts losses after win3 (lose -> lose2 -> lose)
+
 const suits = ['hearts', 'diamonds', 'clubs', 'spades'];
 const ranks = [
-    { name: '2',  value: 2,  file: '02' },
-    { name: '3',  value: 3,  file: '03' },
-    { name: '4',  value: 4,  file: '04' },
-    { name: '5',  value: 5,  file: '05' },
-    { name: '6',  value: 6,  file: '06' },
-    { name: '7',  value: 7,  file: '07' },
-    { name: '8',  value: 8,  file: '08' },
-    { name: '9',  value: 9,  file: '09' },
-    { name: '10', value: 10, file: '10' },
-    { name: 'jack',  value: 10, file: 'J' },
-    { name: 'queen', value: 10, file: 'Q' },
-    { name: 'king',  value: 10, file: 'K' },
-    { name: 'ace',   value: 11, file: 'A' },
+  { name: '2', value: 2, file: '02' },
+  { name: '3', value: 3, file: '03' },
+  { name: '4', value: 4, file: '04' },
+  { name: '5', value: 5, file: '05' },
+  { name: '6', value: 6, file: '06' },
+  { name: '7', value: 7, file: '07' },
+  { name: '8', value: 8, file: '08' },
+  { name: '9', value: 9, file: '09' },
+  { name: '10', value: 10, file: '10' },
+  { name: 'jack', value: 10, file: 'J' },
+  { name: 'queen', value: 10, file: 'Q' },
+  { name: 'king', value: 10, file: 'K' },
+  { name: 'ace', value: 11, file: 'A' },
 ];
+
 let deck = [];
 let playerHand = [];
 let dealerHand = [];
+
 function buildDeck() {
-    deck = [];
-    for (const suit of suits) {
-        for (const rank of ranks) {
-            deck.push({
-                value: rank.value,
-                img: `stupidimages/card_${suit}_${rank.file}.png`
-            });
-        }
+  deck = [];
+  for (const suit of suits) {
+    for (const rank of ranks) {
+      deck.push({
+        value: rank.value,
+        img: `stupidimages/card_${suit}_${rank.file}.png`,
+      });
     }
-    // Shuffle
-    for (let i = deck.length - 1; i > 0; i--) {
-        const j = Math.floor(Math.random() * (i + 1));
-        [deck[i], deck[j]] = [deck[j], deck[i]];
-    }
-    return deck;
+  }
+  for (let i = deck.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [deck[i], deck[j]] = [deck[j], deck[i]];
+  }
+  return deck;
 }
 
-// Pops one card off the deck (removes it so it can't be dealt again)
 function dealCard() {
-    console.log('dealing card')
-    if (deck.length === 0) {
-        deck = buildDeck();
-        console.log('reshuffling deck');
-    } // reshuffle if somehow empty
-    return deck.pop();
+  if (deck.length === 0) deck = buildDeck();
+  return deck.pop();
 }
-
 
 function calculateScore(hand) {
-    console.log('calculating score');
-    let score = hand.reduce((sum, card) => sum + card.value, 0);
-    let aces = hand.filter(card => card.value === 11);
-    console.log(score, aces)
-    if (score > 21 && aces > 0) {
-        aces.forEach( () => {
-            console.log('adjusting ace value')
-            score -= 10;
-        }// aces--;
-    )};
-    return score;
+  let score = hand.reduce((sum, card) => sum + card.value, 0);
+  const aces = hand.filter((card) => card.value === 11);
+  if (score > 21 && aces.length > 0) score -= 10 * aces.length;
+  return score;
 }
 
 function renderBlackjack(showDealer) {
-    console.log('rendering')
-    textBox.innerHTML = '';
+  textBox.innerHTML = '';
 
-    const playerScore = calculateScore(playerHand);
-    const dealerScore = calculateScore(dealerHand);
+  const playerScore = calculateScore(playerHand);
+  const dealerScore = calculateScore(dealerHand);
 
-    const container = document.createElement('div');
+  const container = document.createElement('div');
 
-    // Helper: render a row of card images
-    function cardRow(hand, hideSecond = false) {
-        const row = document.createElement('div');
-        row.style.display = 'flex';
-        row.style.gap = '6px';
-        row.style.marginBottom = '8px';
-        hand.forEach((card, i) => {
-            const img = document.createElement('img');
-        if (hideSecond && i === 1) {
-                img.src = 'stupidimages/card_back.png'; // your card back image
-            } else {
-                img.src = card.img;
-            }
-            img.style.height = '100px';
-            row.appendChild(img);
-        });
-        return row;
-        }
+  function cardRow(hand, hideSecond = false) {
+    const row = document.createElement('div');
+    row.style.display = 'flex';
+    row.style.gap = '6px';
+    row.style.marginBottom = '8px';
 
-    const title = document.createElement('strong');
-    title.textContent = 'Blackjack';
-    container.appendChild(title);
-    container.appendChild(document.createElement('br'));
-    container.appendChild(document.createElement('br'));
+    hand.forEach((card, i) => {
+      const img = document.createElement('img');
+      img.style.height = '100px';
+      if (hideSecond && i === 1) img.src = 'stupidimages/card_back.png';
+      else img.src = card.img;
+      row.appendChild(img);
+    });
 
-    const yourLabel = document.createElement('p');
-    yourLabel.textContent = `Your Hand (Score: ${playerScore})`;
-    container.appendChild(yourLabel);
-    container.appendChild(cardRow(playerHand));
+    return row;
+  }
 
-    const dealerLabel = document.createElement('p');
-    dealerLabel.textContent = showDealer
-        ? `Dealer Hand (Score: ${dealerScore})`
-        : `Dealer Hand`;
-    container.appendChild(dealerLabel);
-    container.appendChild(cardRow(dealerHand, !showDealer)); // hide dealer's second card
-    textBox.appendChild(container);
+  const title = document.createElement('strong');
+  title.textContent = 'Blackjack';
+  container.appendChild(title);
+  container.appendChild(document.createElement('br'));
+  container.appendChild(document.createElement('br'));
 
-    // Buttons
-    const hitBtn = document.createElement('button');
-    hitBtn.innerText = 'Hit';
-    hitBtn.classList.add('Hit');
+  const yourLabel = document.createElement('p');
+  yourLabel.textContent = `Your Hand (Score: ${playerScore})`;
+  container.appendChild(yourLabel);
+  container.appendChild(cardRow(playerHand));
 
-    const standBtn = document.createElement('button');
-    standBtn.innerText = 'Stand';
-    standBtn.classList.add('Stand');
+  const dealerLabel = document.createElement('p');
+  dealerLabel.textContent = showDealer
+    ? `Dealer Hand (Score: ${dealerScore})`
+    : 'Dealer Hand';
+  container.appendChild(dealerLabel);
+  container.appendChild(cardRow(dealerHand, !showDealer));
 
-    const btnWrap = document.createElement('div');
-    btnWrap.appendChild(hitBtn);
-    btnWrap.appendChild(standBtn);
-    textBox.appendChild(btnWrap);
+  textBox.appendChild(container);
 
-    hitBtn.onclick = blackjackHit;
-    standBtn.onclick = blackjackStand;
+  const hitBtn = document.createElement('button');
+  hitBtn.innerText = 'Hit';
+  hitBtn.classList.add('Hit');
+
+  const standBtn = document.createElement('button');
+  standBtn.innerText = 'Stand';
+  standBtn.classList.add('Stand');
+
+  const btnWrap = document.createElement('div');
+  btnWrap.appendChild(hitBtn);
+  btnWrap.appendChild(standBtn);
+  textBox.appendChild(btnWrap);
+
+  // Note: we still allow hit, but we will only transition once (round ends).
+  hitBtn.onclick = blackjackHit;
+  standBtn.onclick = blackjackStand;
 }
 
-// === START ===
-export function startBlackjack(branch) {
-    console.log('starting blackjack');
-    currentBlackjackBranch = branch;
-    deck = buildDeck(); // fresh shuffled deck each game
-    playerHand = [dealCard(), dealCard()];
-    dealerHand = [dealCard(), dealCard()];
-    renderBlackjack(false);
-    console.log (currentBlackjackBranch)
+function getWinPath() {
+  // We want 3 consecutive blackjack wins, then advance.
+  // The `branch` passed into startBlackjack(branch) is the story node:
+  // story.blackjack = { type:'blackjack', win:'blackjackWin', lose:'blackjackLose' }
+  // So we can’t rely on branch.keepWinning or branch.win3 being present.
+  roundWinCount++;
+
+  if (roundWinCount === 1) return currentBlackjackBranch.win; // blackjackWin
+  if (roundWinCount === 2) return 'keepWinning'; // 2nd win
+  // roundWinCount === 3
+  return 'blackjackWin3';
 }
 
-// === HIT ===
+function getLosePath() {
+  // Losses should follow the same blackjack story chain.
+  // Before win3: lose goes to blackjackLose.
+  // After win3: first loss goes to blackjackLose, second to blackjackLose2.
+  roundLoseCount++;
+
+  if (roundLoseCount === 1) return currentBlackjackBranch.lose; // blackjackLose
+  if (roundLoseCount === 2) return 'blackjackLose2'; // 2nd loss
+
+  // >=3: keep losing on blackjackLose so the player keeps retrying
+  roundLoseCount = 1;
+  return currentBlackjackBranch.lose;
+}
+
+
+function endRound(path) {
+  // Immediately transition; this ends the blackjack scene (plays once).
+  setTimeout(() => transition(path), 0);
+}
+
 function blackjackHit() {
-    console.log('hit');
-    playerHand.push(dealCard());
-    const score = calculateScore(playerHand);
-    if (score > 21) {
-        console.log('bust');
-        // Lose: reset win streak, increment lose streak
-        blackjackWinStreak = 0;
-        blackjackLoseStreak++;
-        let losePath = currentBlackjackBranch.lose;
-        if (blackjackLoseStreak === 2 && currentBlackjackBranch.lose2) {
-            losePath = currentBlackjackBranch.lose2;
-            blackjackLoseStreak = 0; // reset after lose2
-        }
-        setTimeout(() => transition(losePath), 1000);
-        return;
-    }
+  playerHand.push(dealCard());
+  const score = calculateScore(playerHand);
+
+  if (score > 21) {
+    // Bust => lose
     renderBlackjack(true);
+
+    // During the first phase (before reaching win3), the story wants regular lose behavior.
+    // We'll just follow the same lose pattern.
+    endRound(getLosePath());
+  } else {
+    renderBlackjack(true);
+  }
 }
 
-// === STAND ===
 function blackjackStand() {
-    console.log('stand');
-    while (calculateScore(dealerHand) < 17) {
-        dealerHand.push(dealCard());
-    }
-    const playerScore = calculateScore(playerHand);
-    const dealerScore = calculateScore(dealerHand);
-    renderBlackjack(true);
-    setTimeout(() => {
-        if (dealerScore > 21 || playerScore > dealerScore) {
-            // Win: reset lose streak, increment win streak
-            blackjackLoseStreak = 0;
-            blackjackWinStreak++;
-            let winPath = currentBlackjackBranch.win;
-            if (blackjackWinStreak === 2 && currentBlackjackBranch.keepWining) {
-                winPath = currentBlackjackBranch.keepWining;
-            }
-            if (blackjackWinStreak === 3 && currentBlackjackBranch.win3) {
-                winPath = currentBlackjackBranch.win3;
-                blackjackWinStreak = 0; // reset after win3
-            } else if (blackjackWinStreak > 3) {
-                blackjackWinStreak = 1; // reset to 1 if over 3
-            }
-            transition(winPath);
-        } else {
-            // Lose: reset win streak, increment lose streak
-            blackjackWinStreak = 0;
-            blackjackLoseStreak++;
-            let losePath = currentBlackjackBranch.lose;
-            if (blackjackLoseStreak === 2 && currentBlackjackBranch.lose2) {
-                losePath = currentBlackjackBranch.lose2;
-                blackjackLoseStreak = 0; // reset after lose2
-            } else if (blackjackLoseStreak > 2) {
-                blackjackLoseStreak = 1; // reset to 1 if over 2
-            }
-            transition(losePath);
-        }
-    }, 1000);
+  while (calculateScore(dealerHand) < 17) dealerHand.push(dealCard());
+
+  const playerScore = calculateScore(playerHand);
+  const dealerScore = calculateScore(dealerHand);
+
+  renderBlackjack(true);
+
+  const playerWins = dealerScore > 21 || playerScore > dealerScore;
+  if (playerWins) {
+    endRound(getWinPath());
+  } else {
+    endRound(getLosePath());
+  }
 }
+
+export function startBlackjack(branch) {
+  currentBlackjackBranch = branch;
+
+  // Reset counters when entering the blackjack game node.
+  // Because each win/lose transition will go to a story node,
+  // we only play the blackjack screen once per transition.
+  roundWinCount = 0;
+  roundLoseCount = 0;
+
+  deck = buildDeck();
+  playerHand = [dealCard(), dealCard()];
+  dealerHand = [dealCard(), dealCard()];
+
+  renderBlackjack(false);
+}
+
