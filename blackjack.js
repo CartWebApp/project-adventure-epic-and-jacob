@@ -2,6 +2,8 @@ import { transition } from "./movePaths.js";
 import { textBox } from "./textStuff.js";
 import { player } from "./playerStats.js";
 let currentBlackjackBranch = null;
+let blackjackWinStreak = 0;
+let blackjackLoseStreak = 0;
 const suits = ['hearts', 'diamonds', 'clubs', 'spades'];
 const ranks = [
     { name: '2',  value: 2,  file: '02' },
@@ -147,8 +149,15 @@ function blackjackHit() {
     const score = calculateScore(playerHand);
     if (score > 21) {
         console.log('bust');
-        // renderBlackjack(false);
-        setTimeout(() => transition(currentBlackjackBranch.lose), 1000);
+        // Lose: reset win streak, increment lose streak
+        blackjackWinStreak = 0;
+        blackjackLoseStreak++;
+        let losePath = currentBlackjackBranch.lose;
+        if (blackjackLoseStreak === 2 && currentBlackjackBranch.lose2) {
+            losePath = currentBlackjackBranch.lose2;
+            blackjackLoseStreak = 0; // reset after lose2
+        }
+        setTimeout(() => transition(losePath), 1000);
         return;
     }
     renderBlackjack(true);
@@ -165,9 +174,32 @@ function blackjackStand() {
     renderBlackjack(true);
     setTimeout(() => {
         if (dealerScore > 21 || playerScore > dealerScore) {
-            transition(currentBlackjackBranch.win);
+            // Win: reset lose streak, increment win streak
+            blackjackLoseStreak = 0;
+            blackjackWinStreak++;
+            let winPath = currentBlackjackBranch.win;
+            if (blackjackWinStreak === 2 && currentBlackjackBranch.keepWining) {
+                winPath = currentBlackjackBranch.keepWining;
+            }
+            if (blackjackWinStreak === 3 && currentBlackjackBranch.win3) {
+                winPath = currentBlackjackBranch.win3;
+                blackjackWinStreak = 0; // reset after win3
+            } else if (blackjackWinStreak > 3) {
+                blackjackWinStreak = 1; // reset to 1 if over 3
+            }
+            transition(winPath);
         } else {
-            transition(currentBlackjackBranch.lose);
+            // Lose: reset win streak, increment lose streak
+            blackjackWinStreak = 0;
+            blackjackLoseStreak++;
+            let losePath = currentBlackjackBranch.lose;
+            if (blackjackLoseStreak === 2 && currentBlackjackBranch.lose2) {
+                losePath = currentBlackjackBranch.lose2;
+                blackjackLoseStreak = 0; // reset after lose2
+            } else if (blackjackLoseStreak > 2) {
+                blackjackLoseStreak = 1; // reset to 1 if over 2
+            }
+            transition(losePath);
         }
     }, 1000);
 }

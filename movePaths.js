@@ -219,20 +219,19 @@ function displayResults() {
 export function displayLog() {
     console.log('Log function activated!');
     const logDiv = document.getElementById('textLog');
-    const logDivSection = document.createElement('textLogContent');
+    if (!logDiv) return;
+    logDiv.innerHTML = '';
     const ol = document.createElement('ol');
     if (log.length > 0) {
-        for (const thingy of log) {
-        const event = log[thingy];
-        console.log(event);
-        console.log(thingy);
-        const li = document.createElement('li');
-        li.classList.add('ancientScroll');
-        li.innerHTML = thingy;
-        ul.appendChild(li);
-    }
-    logDivSection.appendChild(ul);
-    logDiv.appendChild(logDivSection);
-    logDiv.style.display = 'block';
+        for (const entry of log) {
+            const li = document.createElement('li');
+            li.classList.add('ancientScroll');
+            li.innerHTML = entry;
+            ol.appendChild(li);
+        }
+        logDiv.appendChild(ol);
+        logDiv.style.display = 'block';
+    } else {
+        logDiv.style.display = 'none';
     }
 }

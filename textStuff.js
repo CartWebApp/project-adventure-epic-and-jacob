@@ -1,141 +1,184 @@
-//STUFF THAT YOU HAVE TO DO
-//GET BATTLES TO WORK
-//ADD MORE ITEMS
-//USE CSS TO STYLE BETTER
-//CHANGE BACKGROUNDS USING SOME SORT OF VARIABLE IN CERTAIN OBJECTS
-//ADD A 'MEMORY' THING IN CERTAIN OBJECTS AND THEN STORE THEM IN AN ARRAY TO SHOW IN THE RESULTS SCREEN
+// textStuff.js
+// Responsibilities: player stats UI + inventory + save/load + simple UI wiring.
 
+import { player } from "./playerStats.js";
+import { transition, displayLog } from "./movePaths.js";
 
+// ===== DOM refs =====
 export const textBox = document.getElementById('story');
 export const battleScreen = document.getElementById('battle');
 export const shopScreen = document.getElementById('shop');
-const konamiCode = ['ArrowUp', 'ArrowUp', 'ArrowDown', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'ArrowLeft', 'ArrowRight', 'b', 'a' ];
-import { transition } from "./movePaths.js";
-import { player } from "./playerStats.js";
-import { log, results } from "./movePaths.js";
-//Variables
+
+const nameEntry = document.getElementById('nameEnterer');
+const submitName = document.getElementById('enterName');
+
+const popupOverlay = document.getElementById('overlay');
+const closeButton = document.getElementById('close');
+const logButton = document.getElementById('log');
+
+const restartBtn = document.getElementById('restartGame');
+
+// ===== Game state (shared with movePaths via save payload) =====
 export let name = "Guy";
-let elic = 'pizza';
 export const inventory = [];
 
-// Save game state to localStorage
-export function saveGame(currentPath) {
+// ===== Restart =====
+function restartGame() {
+  Object.assign(player, {
+    talons: 300,
+    maxHP: 100,
+    HP: 100,
+    energy: 50,
+    maxEnergy: 50,
+    luck: 3,
+    attack: 5,
+    defense: 5,
+    healCost: 20,
+    defending: false,
+    shardCount: 0,
+  });
+
+  inventory.length = 0;
+  name = "Guy";
+
+  localStorage.removeItem('adventureSave');
+  transition('start');
+}
+
+// Hook up restart button if present
+if (restartBtn) {
+  restartBtn.addEventListener('click', restartGame);
+}
+
+// Hook up name submit if present
+if (submitName) {
+  submitName.addEventListener('click', function () {
+    name = nameEntry?.value || 'Guy';
+    transition('start');
+  });
+}
+
+// Log overlay wiring
+if (logButton) {
+  logButton.addEventListener('click', function () {
+    displayLog();
+    if (popupOverlay) popupOverlay.style.display = 'block';
+  });
+}
+
+if (closeButton) {
+  closeButton.addEventListener('click', function () {
+    if (popupOverlay) popupOverlay.style.display = 'none';
+  });
+}
+
+// ===== Stats display update =====
+export function updateStats() {
+  // health
+  const healthElements = document.getElementsByClassName('health');
+  const healthBars = document.getElementsByClassName('healthBar');
+  for (let i = 0; i < healthElements.length; i++) {
+    healthElements[i].textContent = player.HP;
+  }
+  for (let i = 0; i < healthBars.length; i++) {
+    healthBars[i].value = player.HP;
+    healthBars[i].max = player.maxHP;
+  }
+
+  // energy
+  const energyElements = document.getElementsByClassName('energy');
+  const energyBars = document.getElementsByClassName('energyBar');
+  for (let i = 0; i < energyElements.length; i++) {
+    energyElements[i].textContent = player.energy;
+  }
+  for (let i = 0; i < energyBars.length; i++) {
+    energyBars[i].value = player.energy;
+    energyBars[i].max = player.maxEnergy;
+  }
+
+  // names
+  const nameElements = document.getElementsByClassName('name');
+  for (let i = 0; i < nameElements.length; i++) {
+    nameElements[i].innerHTML = name;
+  }
+
+  // talons
+  const talonElements = document.getElementsByClassName('talons');
+  for (let i = 0; i < talonElements.length; i++) {
+    talonElements[i].textContent = player.talons;
+  }
+}
+
+// ===== Save / Load =====
+export function saveGame(currentPath, log, results) {
   const saveData = {
     player,
+    inventory,
+    currentPath,
+    name,
     log,
     results,
-    inventory,
-    currentPath
   };
   localStorage.setItem('adventureSave', JSON.stringify(saveData));
 }
 
-// Load game state from localStorage
 export function loadGame() {
   const save = localStorage.getItem('adventureSave');
   if (!save) return null;
+
   try {
     const data = JSON.parse(save);
-    // Restore player fields
-    Object.assign(player, data.player);
+
+    if (data.player) Object.assign(player, data.player);
+
     inventory.length = 0;
     if (Array.isArray(data.inventory)) {
       data.inventory.forEach(item => inventory.push(item));
     }
+
     name = data.name || name;
     return data;
   } catch (e) {
     console.error('Failed to load save:', e);
     return null;
   }
-  transition(data.currentPath);
 }
 
+// ===== Init =====
+window.addEventListener('DOMContentLoaded', () => {
+  updateStats();
 
+  // Restore and continue if we have a save.
+  // Note: movePaths.js owns log/results arrays; we just load the payload.
+  const save = loadGame();
+  if (save?.currentPath) {
+    transition(save.currentPath);
+  }
 
-// konami code 
-let konamiPosition = 0;
-document.addEventListener('keyup', function(e) {
-console.log (e.key)
-  if (e.key === konamiCode[konamiPosition]) {
-    konamiPosition++;
-    
- 
-    if (konamiPosition === konamiCode.length) {
-      activateComicSans();
+  // Konami code (kept, but isolated to avoid breaking boot)
+  const konamiCode = ['ArrowUp', 'ArrowUp', 'ArrowDown', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'ArrowLeft', 'ArrowRight', 'b', 'a'];
+  let konamiPosition = 0;
+
+  document.addEventListener('keyup', function (e) {
+    if (e.key === konamiCode[konamiPosition]) {
+      konamiPosition++;
+      if (konamiPosition === konamiCode.length) {
+        activateComicSans();
+        konamiPosition = 0;
+      }
+    } else {
       konamiPosition = 0;
     }
-  } else {
-    konamiPosition = 0;
+  });
+
+  function activateComicSans() {
+    const style = document.createElement('style');
+    style.textContent = `
+      * {
+        font-family: "Comic Sans MS", "Comic Sans", cursive !important;
+      }
+    `;
+    document.head.appendChild(style);
   }
 });
-function activateComicSans() {
-  const style = document.createElement('style');
-  style.textContent = `
-    * {
-      font-family: "Comic Sans MS", "Comic Sans", cursive !important;
-    }
-  `;
-  document.head.appendChild(style);
-}
 
-
-// === UPDATE STATS DISPLAY (Health and Energy) ===
-export function updateStats() {
-    // Update health display and progress bar
-    console.log('changing stat bars and stuff')
-    const healthElements = document.getElementsByClassName('health');
-    const healthBars = document.getElementsByClassName('healthBar');
-    for (let i = 0; i < healthElements.length; i++) {
-        healthElements[i].textContent = player.HP;
-    }
-    for (let i = 0; i < healthBars.length; i++) {
-        healthBars[i].value = player.HP;
-        healthBars[i].max = player.maxHP;
-    }
-    
-    // Update energy display and progress bar
-    const energyElements = document.getElementsByClassName('energy');
-    const energyBars = document.getElementsByClassName('energyBar');
-    for (let i = 0; i < energyElements.length; i++) {
-        energyElements[i].textContent = player.energy;
-    }
-    for (let i = 0; i < energyBars.length; i++) {
-        energyBars[i].value = player.energy;
-        energyBars[i].max = player.maxEnergy;
-    }
-    //update any names
-    const nameElements = document.getElementsByClassName('name');
-    for (let i = 0; i < nameElements.length; i++) {
-        const element = nameElements[i];
-        element.innerHTML = name;
-    }
-    const talonElements = document.getElementsByClassName('talons');
-    for (let i = 0; i < talonElements.length; i++) {
-        talonElements[i].textContent = player.talons;
-    }
-}
-
-const nameEntry = document.getElementById('nameEnterer');
-const submitName = document.getElementById('enterName');
-submitName.addEventListener('click', function() {
-  name = nameEntry.value || 'Guy';
-  console.log(name);
-  transition('start');
-  logButton.style.display = 'block';
-});
-
-import { displayLog } from "./movePaths.js";
-const popupOverlay = document.getElementById('overlay');
-const closeButton = document.getElementById('close');
-const logButton = document.getElementById('log');
-logButton.addEventListener('click', function() {
-    displayLog();
-    popupOverlay.style.display = 'block';
-})
-closeButton.addEventListener('click', function() {
-    popupOverlay.style.display = 'none';
-})
-
-
-updateStats()
